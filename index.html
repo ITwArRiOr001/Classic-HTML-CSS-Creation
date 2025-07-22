@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterful HTML/CSS Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Updated Color Enhancement: Sophisticated Palette */
+            --violet: #5C33F6; /* deep royal violet */
+            --cyan: #00B4D8; /* professional cyan */
+            --pink: #FF6A8F; /* coral-ish soft pink */
+            --yellow: #F4D35E; /* soft sunflower */
+            --dark: #0F0F12; /* matte black-blue */
+
+            /* Light Mode Variables */
+            --bg-primary: linear-gradient(135deg, #f8faff 0%, #e3f0ff 100%);
+            --bg-card: rgba(255,255,255,0.90);
+            --text-primary: #232946;
+            --accent-primary: var(--violet);
+            --accent-secondary: #6f7f99;
+            --shadow: 0 12px 36px rgba(102,51,153, .08);
+            --glass-blur: blur(10px);
+            --hover-glow: 0 0 20px 4px rgba(127,83,255,0.14), 0 2px 18px 0 rgba(46,200,238,.08);
+            --footer-glass: rgba(255,255,255,0.5);
+            --card-header-bg-light: #f0f8ff; /* mintcream equivalent */
+            --card-body-bg-light: #e6e6fa; /* lavender equivalent */
+            --footer-highlight-light: #232946; /* black equivalent */
+
+            /* Buy Me a Coffee Link Styling */
+            --coffee-link-color: var(--accent-secondary);
+            --coffee-link-hover-color: var(--accent-primary);
+            --coffee-link-shadow: 0 0 15px rgba(127,83,255,0.1);
+            --coffee-link-dark-shadow: 0 0 15px rgba(46,200,238,0.1);
+        }
+        [data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #181B2B 0%, #232946 100%);
+            /* Dark Mode Polish: rgba tints with shadows */
+            --bg-card: rgba(34, 34, 54, 0.95);
+            --text-primary: #f2f5ff;
+            --accent-primary: var(--cyan);
+            --accent-secondary: #A0B3CC; /* Dark Mode Polish: Updated accent-secondary */
+            --shadow: 0 12px 36px 0 rgba(63,28,110,.26);
+            --glass-blur: blur(16px);
+            --hover-glow: 0 0 30px 2px rgba(46,200,238, 0.2), 0 2px 18px 0 rgba(250,47,130,.13);
+            --footer-glass: rgba(24,27,43,0.6);
+            --card-header-bg-dark: #2c324e;
+            --card-body-bg-dark: #373f62;
+            --footer-highlight-dark: #f2f5ff;
+
+            /* Buy Me a Coffee Link Dark Mode */
+            --coffee-link-color: var(--accent-secondary);
+            --coffee-link-hover-color: var(--accent-primary);
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.6s cubic-bezier(.31,.61,.52,.98);
+            line-height: 1.65;
+            /* Subtle Animations on Page Load: Body fade-in */
+            opacity: 0;
+            animation: fadeInBody 0.7s ease-in-out forwards;
+        }
+
+        /* Subtle Animations on Page Load: Body fade-in */
+        @keyframes fadeInBody {
+          to {
+            opacity: 1;
+          }
+        }
+
+        /* Bulb Switch */
+        .theme-toggle {
+            position: fixed;
+            top: 18px;
+            right: 16px;
+            z-index: 2000;
+            user-select: none;
+        }
+        .theme-toggle input {
+            display: none;
+        }
+        .theme-toggle label {
+            width: 56px; height: 56px;
+            display: flex;
+            align-items: center; justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: filter 0.2s;
+            filter: drop-shadow(0 8px 18px rgba(127, 83, 255, .06));
+        }
+        .bulb {
+            width: 36px; height: 36px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+        }
+        .bulb-glass {
+            width: 36px; height: 36px;
+            background: radial-gradient(ellipse 130% 100% at 60% 55%, #fff 75%, var(--yellow) 95%, #FDC11F 100%); /* Use yellow variable */
+            border-radius: 50%;
+            box-shadow: 0 6px 24px 0 rgba(var(--yellow-rgb), 0.27); /* Use yellow variable */
+            border: 3px solid #e8e5b9;
+            transition: box-shadow 0.3s, background 0.3s, border 0.3s;
+            position: relative;
+        }
+        .bulb-filament {
+            width: 16px; height: 8px;
+            border-bottom: 2px solid #ccab41;
+            border-radius: 0 0 8px 8px;
+            position: absolute;
+            left: 50%; top: 17px;
+            transform: translateX(-50%);
+        }
+        .bulb-base {
+            width: 16px; height: 10px;
+            background: linear-gradient(180deg, #bdbdbd 40%, #7d7d7d 100%);
+            border-radius: 6px 6px 8px 8px / 7px 7px 10px 10px;
+            position: absolute;
+            left: 50%; bottom: -16px;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 8px #00000015;
+            border: 2.5px solid #969696;
+        }
+        .bulb-ray {
+            display: block;
+            width: 42px; height: 50px;
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -32%);
+            pointer-events: none;
+            opacity: 0; /* Default: OFF */
+            z-index: -1;
+            transition: opacity 0.45s cubic-bezier(.37,.88,.46,1);
+        }
+        .bulb-ray::before {
+            content: '';
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%,-50%);
+            width: 42px; height: 40px;
+            border-radius: 50% 50% 60% 60% / 60% 60% 80% 80%;
+            background: radial-gradient(ellipse 80% 60% at 52% 62%, rgba(var(--yellow-rgb), 0.27) 40%, rgba(var(--yellow-rgb), 0.13) 90%, transparent 100%); /* Use yellow variable */
+            filter: blur(1.8px);
+        }
+        /* Bulb: checked (light on!) */
+        .theme-toggle input:checked + label .bulb-glass {
+            background: radial-gradient(ellipse 120% 90% at 60% 60%, #fff 60%, var(--yellow) 90%, #fae41f 100%); /* Use yellow variable */
+            box-shadow: 0 0 48px 8px rgba(var(--yellow-rgb), 0.69), 0 6px 32px 0 rgba(var(--yellow-rgb), 0.33); /* Use yellow variable */
+            border: 3px solid #ffce44;
+        }
+        .theme-toggle input:checked + label .bulb-ray {
+            opacity: 1;
+            animation: bulb-glow 1.3s cubic-bezier(.82,.27,.55,1.12) alternate infinite;
+        }
+        @keyframes bulb-glow {
+            0% { opacity: .85; }
+            50% { opacity: 1; }
+            100% { opacity: .9; }
+        }
+        /* Bulb: filament dark for light ON, gold for OFF */
+        .theme-toggle input:checked + label .bulb-filament {
+            border-bottom-color: #c2aa23;
+        }
+
+        /* HEADER & TITLE */
+        header {
+            text-align: center;
+            padding: 60px 20px 30px 20px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        header h1 {
+            /* Typography Enhancements: Use DM Serif Display */
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.7rem, 7vw, 3.9rem);
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+            line-height: 1.08;
+            font-weight: 800;
+            background: linear-gradient(92deg, var(--accent-primary) 35%, var(--cyan) 62%, var(--pink) 83%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 36px #b197fc58;
+            letter-spacing: -.01em;
+            position: relative;
+        }
+        header h1::after {
+            content: '';
+            display: block;
+            margin: 18px auto 0 auto;
+            width: 0; /* Animate from 0 width */
+            max-width: 35vw;
+            height: 5px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--cyan), var(--pink) 95%);
+            opacity: 0.60;
+            box-shadow: 0 0 8px var(--accent-primary);
+            animation: underlineExpand 1s ease-out forwards 0.8s; /* Animate on page load */
+        }
+        @keyframes underlineExpand {
+            to {
+                width: 88px;
+            }
+        }
+        header p {
+            font-size: clamp(1.12rem, 2.7vw, 1.25rem);
+            color: var(--accent-secondary);
+            max-width: 710px;
+            margin: 22px auto 0 auto;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-shadow: 0 1px 8px #fff2, 0 0.5px 2px #b8d2ec04;
+        }
+
+        /* NAV & GRID */
+        nav {
+            width: 95vw;
+            max-width: 1210px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(293px,1fr));
+            gap: 30px;
+            padding: 30px 0 0 0;
+            box-sizing: border-box;
+        }
+
+        /* GLASSMORPHIC CARDS */
+        .project-card {
+            background: var(--bg-card);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 230px;
+            text-decoration: none;
+            position: relative;
+            color: var(--text-primary);
+            transition:
+                transform 0.35s cubic-bezier(.36,.47,.44,1.05),
+                box-shadow 0.3s cubic-bezier(.47,.41,.56,1.08),
+                backdrop-filter 0.3s;
+            backdrop-filter: var(--glass-blur);
+            border: 1.7px solid rgba(97,54,205,0.09);
+            outline: none;
+            /* Subtle Animations on Page Load: Cards fade-in */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardFadeIn 0.6s ease forwards;
+            /* animation-delay will be set by JS based on --card-index */
+        }
+
+        /* Subtle Animations on Page Load: Card fade-in */
+        @keyframes cardFadeIn {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .project-card:hover,
+        .project-card:focus-visible {
+            transform: translateY(-10px) scale(1.022);
+            box-shadow: 0 6px 48px 0 var(--accent-primary), var(--hover-glow);
+            z-index: 2;
+        }
+        /* Dark Mode Polish: Add a very soft glow on hover for project-card dark theme */
+        [data-theme="dark"] .project-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 180, 216, 0.12), 0 2px 10px rgba(255,255,255,0.03);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            background: linear-gradient(
+                120deg,
+                transparent 68%,
+                var(--accent-primary) 100%,
+                transparent 100%
+            );
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.49s;
+            z-index: 0;
+        }
+        .project-card:hover::before {
+            opacity: 0.07;
+        }
+        .project-card h2 {
+            /* Typography Enhancements: Use DM Serif Display */
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.42rem;
+            color: var(--text-primary);
+            padding: 22px 22px 12px 22px;
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+            background: var(--card-header-bg-light);
+            border-bottom: 2px solid rgba(131,107,252,0.13);
+            z-index: 2;
+        }
+        [data-theme="dark"] .project-card h2 {
+            background: var(--card-header-bg-dark);
+        }
+        .project-card p {
+            font-size: 1rem;
+            color: var(--text-primary);
+            padding: 5px 22px 22px 22px;
+            margin: 0;
+            flex-grow: 1;
+            background: var(--card-body-bg-light);
+            z-index: 2;
+            font-weight: 500;
+        }
+        [data-theme="dark"] .project-card p {
+            background: var(--card-body-bg-dark);
+        }
+        .project-card .view-button {
+            background: linear-gradient(92deg, var(--accent-primary) 57%, var(--cyan), var(--pink));
+            color: #fff;
+            padding: 13px 0 12px 0;
+            font-weight: 700;
+            font-size: 1.01rem;
+            letter-spacing: 0.08em;
+            text-align: center;
+            border-top: 1px solid rgba(131,107,252,0.10);
+            cursor: pointer;
+            transition: background 0.3s, color 0.23s, transform 0.27s, box-shadow 0.32s;
+            border: none; outline: none;
+            border-radius: 0 0 22px 22px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(127, 83, 255, 0.05);
+        }
+        /* Button Style Upgrade: Minimal hover version */
+        .project-card .view-button:hover {
+            background: var(--accent-primary); /* Solid color on hover */
+            color: #fff;
+            transform: scale(1.03);
+            box-shadow: 0 4px 20px rgba(0, 180, 216, 0.3); /* Cyan shadow for emphasis */
+        }
+        /* Button Style Upgrade: Optional minimal variant class */
+        .project-card .view-button.minimal {
+            background: var(--accent-primary);
+            border-top: 1px solid var(--accent-primary);
+        }
+        .project-card .view-button.minimal:hover {
+            background: var(--accent-primary);
+            box-shadow: 0 4px 20px rgba(0, 180, 216, 0.3);
+        }
+
+        /* FOCUS ACCESSIBILITY */
+        .project-card:focus-visible .view-button {
+            box-shadow: 0 0 0 3px var(--cyan);
+        }
+
+        /* Coffee Link */
+        .coffee-link-container {
+            width: 70%;
+            max-width: 1000px; /* Match nav max-width */
+            display: flex;
+            justify-content: center;
+            padding: 50px 0 30px 0;
+            box-sizing: border-box;
+            opacity: 0.8;
+            animation: fadeInBody 0.7s ease-in-out forwards 1s; /* Delayed fade-in */
+        }
+        .coffee-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--coffee-link-color);
+            transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 50px; /* Pill shape */
+            background: var(--bg-card); /* Use card background for consistency */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05), var(--coffee-link-shadow);
+            border: 1px solid rgba(97,54,205,0.09); /* Match card border */
+            backdrop-filter: var(--glass-blur); /* Match card glassmorphism */
+            user-select: none;
+        }
+        .coffee-link:hover {
+            color: var(--coffee-link-hover-color);
+            transform: translateY(-5px) scale(1.02);
+            text-shadow: 0 2px 8px var(--coffee-link-hover-color);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1), var(--glow-strong);
+        }
+        .coffee-link span { /* For the emoji */
+            font-size: 1.5em; /* Larger emoji */
+            line-height: 1; /* Align emoji */
+        }
+        .coffee-link:focus-visible {
+            outline: 2px solid var(--coffee-link-hover-color);
+            outline-offset: 4px;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 54px;
+            padding: 32px 18px 38px 18px;
+            text-align: center;
+            font-size: 0.98rem;
+            width: 100%;
+            max-width: 1112px;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 8px 40px rgba(127,83,255,0.04); /* Adjusted shadow for consistency */
+            background: var(--footer-glass);
+            backdrop-filter: blur(22px);
+            /* Subtle Animations on Page Load: Footer fade-in */
+            opacity: 0;
+            animation: fadeInBody 0.7s ease-in-out forwards 1.2s; /* Delay for sequence */
+        }
+        footer p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--accent-secondary);
+            letter-spacing: 0.03em;
+        }
+        footer p span.footer-highlight {
+            color: var(--footer-highlight-light);
+            font-weight: bold;
+        }
+        [data-theme="dark"] footer p span.footer-highlight {
+            color: var(--footer-highlight-dark);
+        }
+        /* Minor UI Enhancements: Footer icons */
+        footer .footer-links {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        footer .footer-links a {
+            color: var(--accent-secondary); /* Muted gray */
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        footer .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+
+        @media (max-width: 870px) {
+            nav {
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+            .coffee-link-container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav {
+                grid-template-columns: 1fr;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            header h1 {
+                font-size: 2.7rem;
+            }
+        }
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2.1rem;
+            }
+            .theme-toggle label {
+                width: 45px;
+                height: 45px;
+            }
+            .bulb {
+                width: 26px;
+                height: 26px;
+            }
+            .bulb-glass {
+                width: 26px;
+                height: 26px;
+            }
+            .coffee-link {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+            .coffee-link span {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+      <input type="checkbox" id="theme-switch"
+             onchange="document.documentElement.setAttribute('data-theme', this.checked ? 'dark' : 'light')">
+      <label for="theme-switch" title="Toggle dark/light">
+        <span class="bulb">
+          <span class="bulb-ray"></span>
+          <span class="bulb-glass">
+            <span class="bulb-filament"></span>
+          </span>
+          <span class="bulb-base"></span>
+        </span>
+      </label>
+    </div>
+    <header>
+        <h1>Elite CSS Creations</h1>
+        <p>Explore a collection of sophisticated, pure CSS projects showcasing cutting-edge design and creativity without JavaScript.</p>
+    </header>
+    <nav>
+        <a href="project1.html" class="project-card" style="--card-index: 0;">
+            <h2>1. Interactive Portfolio</h2>
+            <p>A sleek resume with dynamic hover effects and elegant typography, optimized for print and digital.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project2.html" class="project-card" style="--card-index: 1;">
+            <h2>2. CSS Art Gallery</h2>
+            <p>Intricate illustrations crafted with CSS, showcasing the artistry of code.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project3.html" class="project-card" style="--card-index: 2;">
+            <h2>3. Optical Illusions</h2>
+            <p>Mesmerizing visual effects and mind-bending illusions, all powered by CSS.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project4.html" class="project-card" style="--card-index: 3;">
+            <h2>4. Magazine Layout</h2>
+            <p>A refined, grid-based magazine design with advanced CSS layouts.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project5.html" class="project-card" style="--card-index: 4;">
+            <h2>5. Cyber Terminal UI</h2>
+            <p>A futuristic terminal interface with immersive animations and cyberpunk aesthetics.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project6.html" class="project-card" style="--card-index: 5;">
+            <h2>6. CSS Calendar</h2>
+            <p>A stylish calendar with hover-revealed task cards, built with CSS Grid.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project7.html" class="project-card" style="--card-index: 6;">
+            <h2>7. Game UI Design</h2>
+            <p>A sleek, fictional game interface with intricate layouts and immersive styling.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project8.html" class="project-card" style="--card-index: 7;">
+            <h2>8. Flip Card Gallery</h2>
+            <p>An elegant 3D card flip gallery for interactive showcases.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project9.html" class="project-card" style="--card-index: 8;">
+            <h2>9. Product Landing</h2>
+            <p>A modern product landing page with advanced CSS shapes and effects.</p>
+            <span class="view-button">Explore</span>
+        </a>
+        <a href="project10.html" class="project-card" style="--card-index: 9;">
+            <h2>10. Vertical Timeline</h2>
+            <p>A sophisticated timeline with smooth animations and hover reveals.</p>
+            <span class="view-button">Explore</span>
+        </a>
+    </nav>
+
+    <div class="coffee-link-container">
+        <a href="buy-me-coffee.html" class="coffee-link" aria-label="Support my work by buying me a coffee">
+            <span>☕</span> Support My Work
+        </a>
+    </div>
+
+    <footer>
+        <p><span class="footer-highlight">© 2025 Elite CSS Portfolio.<br> Crafted with precision and creativity.</span></p>
+        <div class="footer-links">
+            <a href="#" title="Email"><span class="icon">✉️</span></a>
+            <a href="#" title="GitHub"><span class="icon">🐙</span></a>
+            <a href="#" title="LinkedIn"><span class="icon">🔗</span></a>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript to assign --card-index for staggered animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach((card, index) => {
+                card.style.setProperty('--card-index', index);
+            });
+        });
+        const updateRgbValues = () => {
+            const root = document.documentElement;
+            const yellow = getComputedStyle(root).getPropertyValue('--yellow').trim();
+            const yellowRgb = yellow.startsWith('#') ? hexToRgb(yellow) : yellow;
+            root.style.setProperty('--yellow-rgb', yellowRgb);
+        };
+
+        const hexToRgb = (hex) => {
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 4) { // #RGB
+                r = parseInt(hex[1] + hex[1], 16);
+                g = parseInt(hex[2] + hex[2], 16);
+                b = parseInt(hex[3] + hex[3], 16);
+            } else if (hex.length === 7) { // #RRGGBB
+                r = parseInt(hex.substring(1, 3), 16);
+                g = parseInt(hex.substring(3, 5), 16);
+                b = parseInt(hex.substring(5, 7), 16);
+            }
+            return `${r}, ${g}, ${b}`;
+        };
+
+        // Call on initial load and whenever theme changes (if you add a theme change listener)
+        updateRgbValues();
+        document.getElementById('theme-switch').addEventListener('change', updateRgbValues);
+    </script>
+</body>
+</html>
