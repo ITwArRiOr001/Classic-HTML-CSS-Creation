@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 4: Abstract Grid Magazine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body and Typography */
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right bottom, #121212, #212121); /* Deep Charcoal to Dark Grey */
+            color: #e0e0e0; /* Light Grey text for contrast */
+            line-height: 1.8;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: rgba(0, 0, 0, 0.6); /* More opaque, sleek black */
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px); /* More pronounced frosted glass effect */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Subtle metallic line */
+        }
+
+        .back-nav a {
+            color: #bdbdbd; /* Muted silver */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .back-nav a:hover {
+            color: #00bcd4; /* Cyan accent on hover */
+            transform: scale(1.05);
+        }
+
+        .back-nav h1 {
+            color: #ffffff;
+            font-size: 1.6rem;
+            margin: 0;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.08em;
+        }
+
+        /* Magazine Layout Container */
+        .magazine-layout {
+            margin-top: 100px; /* Space for fixed header and some top margin */
+            max-width: 1280px;
+            padding: 40px;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns for main grid */
+            grid-template-rows: auto;
+            gap: 50px; /* Larger gap between grid items */
+            background: rgba(40, 40, 40, 0.4); /* Darker transparent background for the container */
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.6); /* Stronger, deeper shadow */
+            border-radius: 15px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+        }
+
+        /* Abstract Background Elements for the magazine layout */
+        .magazine-layout::before,
+        .magazine-layout::after {
+            content: '';
+            position: absolute;
+            background: radial-gradient(circle, rgba(0, 188, 212, 0.25) 0%, transparent 70%); /* Muted Cyan glow */
+            border-radius: 50%;
+            filter: blur(100px); /* Soft glow */
+            z-index: -1;
+            animation: glowMove 15s infinite alternate ease-in-out;
+        }
+
+        .magazine-layout::before {
+            width: 350px;
+            height: 350px;
+            top: -70px;
+            left: -70px;
+        }
+
+        .magazine-layout::after {
+            width: 450px;
+            height: 450px;
+            bottom: -90px;
+            right: -90px;
+            background: radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, transparent 70%); /* Muted Amber glow */
+            animation-delay: 2s;
+        }
+
+        @keyframes glowMove {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+            50% { transform: translate(60px, 40px) scale(1.1); opacity: 0.9; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            color: #00bcd4; /* Cyan for main headers */
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            color: #ffffff; /* White for subheaders */
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 1rem;
+            color: rgba(224, 224, 224, 0.9); /* Slightly darker light grey for body text */
+        }
+
+        /* Grid Item Styling */
+        .grid-item {
+            background-color: rgba(25, 25, 25, 0.6); /* Even darker transparent background */
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle border */
+        }
+
+        .grid-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+            background-color: rgba(35, 35, 35, 0.8); /* More opaque and darker on hover */
+        }
+
+        /* Feature Article (spans multiple columns/rows) */
+        .feature-article {
+            grid-column: 1 / span 3; /* Spans 3 columns */
+            grid-row: span 2; /* Spans 2 rows */
+            background: linear-gradient(135deg, #424242, #212121); /* Dark Grey to Charcoal */
+            color: #fff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Align content to bottom */
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .feature-article::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 2px;
+            background: linear-gradient(45deg, #00bcd4, #0097a7, #ff9800); /* Cyan to Teal to Amber animated border */
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotateBorder 6s linear infinite; /* Slower, more impactful rotation */
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feature-article h2 {
+            color: #00bcd4; /* Cyan for main feature header */
+            font-size: clamp(3rem, 7vw, 4.5rem);
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .feature-article p {
+            color: rgba(255, 255, 255, 0.98);
+            font-size: 1.15rem;
+        }
+
+        /* Image Placeholder replacement designs */
+        .css-design {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .css-design::before {
+            content: attr(data-label); /* Use a data attribute for label */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease, background 0.4s ease;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            backdrop-filter: blur(3px);
+            font-weight: bold;
+        }
+
+        .grid-item:hover .css-design::before {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        /* Inner glow effect for css-design on hover */
+        .css-design::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            transform: scale(0.8);
+        }
+
+        .grid-item:hover .css-design::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Specific CSS Designs based on Headers */
+
+        /* 1. Mastering Flexbox for Responsive Design */
+        .flexbox-design {
+            background: linear-gradient(to right, #3f51b5, #2196f3); /* Indigo to Blue */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .flexbox-design div {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .flexbox-design:hover div:nth-child(1) { transform: scale(1.2) translateY(-5px); }
+        .flexbox-design:hover div:nth-child(2) { transform: scale(1.0); }
+        .flexbox-design:hover div:nth-child(3) { transform: scale(1.2) translateY(5px); }
+
+
+        /* 2. The Beauty of Custom Fonts in Web Design */
+        .fonts-design {
+            background: linear-gradient(to bottom, #795548, #5d4037); /* Brown to Dark Brown */
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f5f5f5;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        .fonts-design span {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .fonts-design:hover span:nth-child(even) { transform: translateY(-8px); }
+        .fonts-design:hover span:nth-child(odd) { transform: translateY(8px); }
+
+
+        /* 3. Animations and Transitions: Bringing Life to Static Pages */
+        .animations-design {
+            background: linear-gradient(to right, #673ab7, #9c27b0); /* Deep Purple to Violet */
+            position: relative;
+        }
+        .animations-design::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffffff;
+            opacity: 0.8;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: pulseCircle 2s infinite ease-out;
+            box-shadow: 0 0 20px rgba(255,255,255,0.7);
+        }
+        @keyframes pulseCircle {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+        }
+
+        /* 4. Advanced CSS Selectors: Precision Targeting */
+        .selectors-design {
+            background: linear-gradient(to bottom, #4caf50, #2e7d32); /* Dark Green */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        .selectors-design div {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        .selectors-design:hover div:nth-child(2n) { background-color: rgba(0, 188, 212, 0.5); } /* Cyan squares */
+        .selectors-design:hover div:nth-child(3n) { background-color: rgba(255, 152, 0, 0.5); } /* Amber squares */
+
+
+        /* Sidebar/Ad Placeholder - Enhanced with unique styling */
+        .sidebar-ad {
+            grid-column: 4 / span 1; /* Last column */
+            grid-row: 1 / span 3; /* Spans multiple rows */
+            background: linear-gradient(to bottom, #303030, #1a1a1a); /* Dark gradient for sidebar */
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #f5f5f5; /* Light grey text */
+            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            font-size: 1.3rem;
+            position: sticky; /* Make it sticky */
+            top: 100px; /* Adjust sticky position below header */
+            height: fit-content; /* Fit content height */
+            border: 2px solid #00bcd4; /* Cyan accent border */
+            animation: pulseAd 3s infinite ease-in-out alternate;
+        }
+
+        @keyframes pulseAd {
+            0% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
+        }
+
+        .sidebar-ad h3 {
+            color: #00bcd4; /* Cyan for sidebar header */
+            margin-top: 0;
+            font-size: 2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .sidebar-ad p {
+            color: #bdbdbd; /* Muted silver for sidebar body text */
+            font-size: 1rem;
+        }
+
+        /* Footer - Minimalist and integrated */
+        .magazine-footer {
+            grid-column: 1 / -1; /* Spans all columns */
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(224, 224, 224, 0.7);
+            font-size: 0.9rem;
+            margin-top: 30px;
+            background: rgba(10, 10, 10, 0.5); /* Very dark, subtle background */
+            border-radius: 0 0 15px 15px; /* Rounded bottom corners matching layout */
+            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .magazine-footer p {
+            color: inherit; /* Inherit color from parent */
+            margin: 0;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .magazine-layout {
+                grid-template-columns: repeat(3, 1fr); /* 3 columns */
+                padding: 30px;
+            }
+            .feature-article {
+                grid-column: 1 / span 3; /* Spans all 3 columns */
+            }
+            .sidebar-ad {
+                grid-column: 1 / -1; /* Spans all columns at the bottom */
+                grid-row: auto; /* Reset row span */
+                position: static; /* Remove sticky */
+                margin-top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .magazine-layout {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns */
+                padding: 25px;
+            }
+            .feature-article {
+                grid-column: 1 / span 2;
+            }
+            .small-article {
+                grid-column: span 1;
+            }
+            .sidebar-ad {
+                grid-column: 1 / span 2;
+            }
+            .feature-article h2 {
+                font-size: 2.5rem;
+            }
+            .feature-article p {
+                font-size: 1.05rem;
+            }
+            .css-design {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .magazine-layout {
+                grid-template-columns: 1fr; /* Single column layout */
+                padding: 20px;
+                margin-top: 80px;
+            }
+            .feature-article, .small-article, .sidebar-ad {
+                grid-column: 1 / -1; /* All items span full width */
+                grid-row: auto;
+            }
+            .feature-article h2 {
+                font-size: 2rem;
+            }
+            .feature-article p {
+                font-size: 0.95rem;
+            }
+            .css-design {
+                height: 160px;
+            }
+            .back-nav h1 {
+                font-size: 1.4rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Abstract Grid Magazine</h1>
+        <a href="index.html">--Exit</a>
+    </header>
+
+    <div class="magazine-layout">
+        <article class="grid-item feature-article">
+            <h2>The Unseen Art: Pushing CSS Boundaries</h2>
+            <p>Beyond styling, CSS is a canvas for true artistry. This deep dive uncovers experimental techniques, 3D transformations, and intricate animations that redefine what's possible with pure stylesheets. Witness the fusion of logic and boundless imagination.</p>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 25px;">By The Pixel Alchemist</p>
+        </article>
+
+        <aside class="grid-item sidebar-ad">
+            <h3>Innovate with CSS!</h3>
+            <p>Discover new frontiers in web design. Explore our advanced tutorials!</p>
+        </aside>
+
+        <article class="grid-item small-article">
+            <div class="css-design flexbox-design" data-label="DYNAMIC FLEXFLOW">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h3>Mastering Flexbox for Responsive Design</h3>
+            <p>Understand the core principles of Flexbox and how it revolutionizes component alignment and distribution.</p>
+        </article>
+
+        <article class="grid-item small-article">
+            <div class="css-design fonts-design" data-label="TYPOGRAPHY IN MOTION">
+                <span>F</span><span>o</span><span>n</span><span>t</span><span>s</span>
+            </div>
+            <h3>The Beauty of Custom Fonts in Web Design</h3>
+            <p>Elevate your typography with carefully selected font pairings and advanced CSS font properties for stunning visual impact.</p>
+        </article>
+
+        <article class="grid-item small-article">
+            <div class="css-design animations-design" data-label="PULSING EFFECTS">
+                </div>
+            <h3>Animations and Transitions: Bringing Life to Static Pages</h3>
+            <p>Explore the art of subtle and impactful CSS animations to create engaging user experiences without performance overhead.</p>
+        </article>
+
+        <article class="grid-item small-article">
+            <div class="css-design selectors-design" data-label="PRECISION TARGETING">
+                <div></div><div></div><div></div>
+                <div></div><div></div><div></div>
+                <div></div><div></div><div></div>
+            </div>
+            <h3>Advanced CSS Selectors: Precision Targeting</h3>
+            <p>Uncover the power of advanced selectors to write cleaner, more maintainable CSS and target elements with surgical precision.</p>
+        </article>
+
+        <footer class="magazine-footer">
+            <p><strong>© 2025 The CSS Canvas.<br> Where code meets pure imagination.</strong></p>
+        </footer>
+    </div>
+</body>
+</html>

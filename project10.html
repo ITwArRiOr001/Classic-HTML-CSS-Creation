@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 10: Timeline / Vertical Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for a Professional & Impactful Palette */
+        :root {
+            --bg-start: #1a1a1a; /* Deeper charcoal */
+            --bg-end: #282828;   /* Slightly lighter deep grey */
+            --header-bg: rgba(0, 0, 0, 0.8); /* Dark translucent header */
+            --header-text: #f5f5f5; /* Light grey for header text */
+            --header-link-color: #d4af37; /* Refined gold for navigation */
+            --header-link-hover: #e6b800; /* Brighter, more authoritative gold */
+            
+            --timeline-title-color: #d4af37; /* Distinguished gold for main title */
+            --timeline-accent-line: #b30000; /* Deep, impactful red for line accent */
+            
+            --timeline-line-color: #444; /* Darker grey for the main line */
+            --timeline-dot-color: #d4af37; /* Distinguished gold for dots */
+            --timeline-dot-border: #1a1a1a; /* Matches body bg for subtle depth */
+            --timeline-dot-hover: #ff4d4d; /* Brighter, professional red */
+            
+            --card-bg: rgba(30, 30, 30, 0.9); /* Dark, solid-feel card */
+            --card-border-accent: #b30000; /* Deep red accent border */
+            --card-shadow: rgba(0, 0, 0, 0.7);
+            --card-text-color: #eee; /* Very light grey for clean text */
+            --card-heading-color: #d4af37; /* Distinguished gold for card headings */
+            --card-duration-color: #999; /* Medium grey for subtle duration */
+
+            --hover-reveal-bg: rgba(0, 0, 0, 0.9); /* Darker reveal overlay */
+            --hover-reveal-text: #a7ffeb; /* Cool, professional cyan */
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400; /* Lighter default weight for readability */
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right bottom, var(--bg-start), var(--bg-end));
+            color: var(--card-text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            line-height: 1.6; /* More standard line height */
+            position: relative;
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: var(--header-bg);
+            padding: 15px 30px; /* Standard padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 130%; 
+            box-sizing: border-box;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3); /* Subtler shadow */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--header-link-color); /* Thinner gold border */
+            backdrop-filter: blur(8px);
+        }
+
+        .back-nav a {
+            color: var(--header-link-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem; /* Standard font size */
+            transition: color 0.3s ease, transform 0.2s ease;
+            flex-shrink: 0; /* Prevent the link from shrinking too much */
+            padding: 0 5px; /* Ensure some padding for the link */
+        }
+
+        .back-nav a:hover {
+            color: var(--header-link-hover);
+            transform: translateY(-1px); /* Subtle lift */
+        }
+
+        .back-nav h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--header-text);
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 500; /* Slightly lighter */
+            /* --- FIX: Ensure proper text wrapping and sizing --- */
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center; /* Center title */
+            white-space: nowrap; /* Prevent title from wrapping on larger screens */
+            overflow: hidden; /* Hide overflow if text is still too long */
+            text-overflow: ellipsis; /* Add ellipsis if text is hidden */
+            min-width: 0; /* Allow it to shrink beyond its content size if needed by flexbox */
+            padding: 0 15px; /* Add internal padding to prevent text hugging edges */
+            box-sizing: border-box; /* Include padding in width */
+            /* --- END FIX --- */
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            margin-top: 100px; /* Standard spacing */
+            max-width: 900px; /* Slightly narrower for focus */
+            width: 90%;
+            padding: 30px 0; /* Standard padding */
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .timeline-container h2 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.2rem, 4vw, 3rem); /* Refined title size */
+            color: var(--timeline-title-color);
+            text-align: center;
+            margin-bottom: 40px; /* Consistent spacing */
+            position: relative;
+            padding-bottom: 12px;
+        }
+        .timeline-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px; /* More conservative width */
+            height: 2px; /* Thinner line */
+            background-color: var(--timeline-accent-line); /* Deep red accent */
+            border-radius: 1px;
+        }
+
+
+        /* The vertical timeline line */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            width: 2px; /* Thinner, cleaner line */
+            background-color: var(--timeline-line-color);
+            top: 130px; /* Adjust start position */
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        /* Timeline Item */
+        .timeline-item {
+            padding: 15px 0; /* Standard padding */
+            position: relative;
+            width: 50%;
+            margin-bottom: 30px; /* Consistent spacing */
+            opacity: 0;
+            transform: translateY(15px); /* More subtle initial translateY */
+            animation: fade-in 0.8s ease forwards; /* Slightly faster fade-in */
+        }
+
+        /* Staggered animation delays (adjusted) */
+        .timeline-item:nth-child(2) { animation-delay: 0.15s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.45s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(6) { animation-delay: 0.75s; }
+        .timeline-item:nth-child(7) { animation-delay: 0.9s; }
+
+
+        /* Fade-in animation */
+        @keyframes fade-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Right side of timeline */
+        .timeline-item:nth-child(odd) {
+            margin-left: 50%;
+            padding-left: 30px; /* Adjusted spacing */
+            text-align: left;
+        }
+
+        /* Left side of timeline */
+        .timeline-item:nth-child(even) {
+            margin-right: 50%;
+            padding-right: 30px; /* Adjusted spacing */
+            text-align: right;
+        }
+
+        /* Dot on the timeline line */
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 12px; /* Smaller, refined dot */
+            height: 12px;
+            background-color: var(--timeline-dot-color); /* Distinguished gold dot */
+            border: 2px solid var(--timeline-dot-border); /* Thinner border */
+            border-radius: 50%;
+            top: 25px; /* Vertical alignment with content */
+            z-index: 1;
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            left: -6px; /* Position on the line */
+            transform: translateX(-50%);
+        }
+
+        .timeline-item:nth-child(even)::after {
+            right: -6px; /* Position on the line */
+            transform: translateX(50%);
+        }
+
+        .timeline-item:hover::after {
+            transform: scale(1.2); /* Subtle scale on hover */
+            background-color: var(--timeline-dot-hover); /* Professional red on hover */
+            box-shadow: 0 0 8px var(--timeline-dot-hover); /* Subtle glow */
+        }
+
+        /* Card-like content for timeline items */
+        .timeline-content {
+            background-color: var(--card-bg);
+            padding: 20px; /* Standard padding */
+            border-radius: 5px; /* More subtle rounding */
+            box-shadow: 0 2px 10px var(--card-shadow); /* Subtler shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            position: relative;
+            border-left: 3px solid var(--card-border-accent); /* Thinner accent border */
+            border-right: 3px solid transparent;
+        }
+        .timeline-item:nth-child(even) .timeline-content {
+            border-left: 3px solid transparent;
+            border-right: 3px solid var(--card-border-accent);
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-2px); /* Minimal lift */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 5px var(--timeline-dot-color); /* Subtler shadow and glow */
+            border-color: var(--timeline-dot-color);
+        }
+
+
+        .timeline-content h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem; /* Refined heading size */
+            color: var(--card-heading-color);
+            margin-top: 0;
+            margin-bottom: 8px; /* Consistent spacing */
+            font-weight: 600;
+        }
+
+        .timeline-content .duration {
+            font-size: 0.9rem; /* Standard size */
+            color: var(--card-duration-color);
+            margin-bottom: 10px; /* Consistent spacing */
+            display: block;
+            font-style: italic;
+        }
+
+        .timeline-content p {
+            font-size: 0.9rem; /* Standard size */
+            color: var(--card-text-color);
+            line-height: 1.5; /* Standard line height */
+        }
+
+        /* Hover Reveal - Description */
+        .timeline-content::before {
+            content: attr(data-details);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--hover-reveal-bg);
+            color: var(--hover-reveal-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px; /* Standard padding */
+            box-sizing: border-box;
+            border-radius: 5px; /* Matches card */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            font-size: 0.9rem; /* Standard font size */
+            text-align: center;
+            cursor: default;
+        }
+
+        .timeline-item:hover .timeline-content::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .back-nav h1 {
+                font-size: 1.3rem;
+                /* --- FIX: Allow wrapping on smaller screens --- */
+                white-space: normal; /* Allow text to wrap */
+                padding: 0 10px; /* Keep some side padding */
+                text-overflow: clip; /* No ellipsis when wrapping */
+                /* --- END FIX --- */
+            }
+            .back-nav a {
+                font-size: 0.9rem;
+            }
+            .timeline-container {
+                margin-top: 80px;
+                padding: 20px 0;
+            }
+
+            .timeline-container::before {
+                left: 10px;
+                transform: translateX(0);
+                top: 110px;
+                width: 1px; /* Even thinner line on mobile */
+            }
+
+            .timeline-item {
+                width: 100%;
+                margin-left: 0;
+                padding-left: 35px;
+                text-align: left;
+            }
+
+            .timeline-item:nth-child(even) {
+                margin-right: 0;
+                padding-left: 35px;
+                text-align: left;
+            }
+
+            .timeline-item::after {
+                left: 10px;
+                transform: translateX(-50%);
+                width: 10px;
+                height: 10px;
+                top: 22px;
+                border-width: 1.5px;
+            }
+            .timeline-item:nth-child(even)::after {
+                left: 10px;
+                right: auto;
+                transform: translateX(-50%);
+            }
+
+            .timeline-item:hover::after {
+                transform: scale(1.1);
+            }
+
+            .timeline-content {
+                border-right: none;
+                border-left: 2px solid var(--card-border-accent);
+                padding: 15px;
+            }
+
+            .timeline-container h2 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+                padding-bottom: 10px;
+            }
+            .timeline-container h2::after {
+                width: 50px;
+                height: 1.5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-nav h1 {
+                font-size: 1.1rem; /* Smaller on very small screens */
+                padding: 0 5px; /* Ensure minimal padding */
+            }
+            .back-nav a {
+                font-size: 0.85rem;
+            }
+            .timeline-container {
+                margin-top: 70px;
+                padding: 15px 0;
+            }
+            .timeline-container h2 {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+                padding-bottom: 8px;
+            }
+            .timeline-container h2::after {
+                width: 40px;
+            }
+            .timeline-item {
+                padding-left: 30px;
+                margin-bottom: 25px;
+            }
+            .timeline-item::after {
+                width: 8px;
+                height: 8px;
+                top: 18px;
+            }
+            .timeline-content {
+                padding: 10px;
+            }
+            .timeline-content h3 {
+                font-size: 1.1rem;
+                margin-bottom: 5px;
+            }
+            .timeline-content .duration, .timeline-content p {
+                font-size: 0.8rem;
+                margin-bottom: 8px;
+            }
+            .timeline-content::before {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Timeline / Vertical Resume</h1>
+        <a href="index.html">←Exit</a>
+    </header>
+
+    <div class="timeline-container">
+        <h2>Professional Trajectory</h2>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Completed secondary education in 2019, marking the foundation without prior formal exposure to computer science.">
+                <h3>Foundational Education</h3>
+                <span class="duration">2019: 10th Standard Completion</span>
+                <p>Completed secondary schooling, establishing a fundamental academic base. Initial exposure to computer science was not part of the curriculum.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Completed higher secondary education in 2021 with an initial understanding of basic HTML, signifying the first step into web development.">
+                <h3>Introduction to Web Development</h3>
+                <span class="duration">2021: 12th Standard & Basic HTML</span>
+                <p>Graduated from higher secondary education, concurrently acquiring introductory knowledge in HTML, marking the commencement of engagement with web technologies.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Participated in HCLTech's TechBee career program from 2022-2024, integrating professional experience with academic studies towards a Bachelor's degree from Amity University.">
+                <h3>Integrated Professional & Academic Development</h3>
+                <span class="duration">2022 - 2024: HCLTech TechBee & Amity University (Work & Study)</span>
+                <p>Engaged in a structured career program at HCLTech, combining practical professional roles with academic advancement at Amity University, India.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Intensified focus on front-end development from 2024-2025, achieving advanced proficiency in HTML and CSS, coupled with intermediate understanding of JavaScript for dynamic interfaces.">
+                <h3>Specialization in Front-End Technologies</h3>
+                <span class="duration">2024 - 2025: Advanced HTML/CSS & Intermediate JavaScript</span>
+                <p>Concentrated on mastering front-end technologies, attaining advanced capabilities in HTML and CSS, alongside developing intermediate JavaScript skills for dynamic user interfaces.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Currently involved in continuous learning and knowledge expansion from 2025 onwards within the rapidly evolving fields of Artificial Intelligence (AI), Machine Learning (ML), and Python programming.">
+                <h3>Venturing into AI/ML and Python Ecosystems</h3>
+                <span class="duration">2025 - Ongoing: AI/ML & Python Exploration</span>
+                <p>Actively pursuing knowledge and staying abreast of advancements in Artificial Intelligence, Machine Learning, and Python programming landscapes.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content" data-details="Dedicated to innovating and creating distinctive, high-performing web experiences leveraging the full potential of CSS, aiming for script-free, visually compelling solutions.">
+                <h3>Pioneering CSS-Driven Web Innovation</h3>
+                <span class="duration">Present: Advancing Pure CSS Solutions</span>
+                <p>Committed to pushing the creative and technical boundaries of web development through sophisticated, CSS-only implementations for impactful and efficient user experiences.</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

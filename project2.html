@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Curated CSS 3D Shapes Gallery – minimalist, elegant, sharp.">
+  <title>Minimalist Badass 3D CSS Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: linear-gradient(120deg, #181c24 0%, #282d38 100%);
+      --surface: #222732;
+      --accent: #46dfaf;
+      --gold: #f4be4f;
+      --edge: #565b68;
+      --white: #f5f5f7;
+      --shadow: 0 10px 30px #46dfaf10, 0 0 1px #000c, 0 5px 24px 0 #17134044;
+      --glow-calm: 0 0 22px #46dfaf66, 0 0 15px #f4be4f26;
+      --glow-strong: 0 0 40px #46dfaf9e, 0 0 24px #f4be4f5e;
+      --transition: cubic-bezier(.4,.8,.1,1) 0.3s;
+
+      /* Quantum Flux specific colors */
+      --flux-color-1: #25aae1; /* Vibrant blue */
+      --flux-color-2: #44ddb8; /* Green-cyan */
+      --flux-color-3: #ff6e7f; /* Soft red/pink */
+      --flux-shadow: 0 0 30px #25aae166, 0 0 20px #44ddb866;
+      --flux-sparkle-color: #ffffff;
+    }
+    body {
+      background: var(--bg-main);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      text-align: center;
+      padding: 2.2rem 0 1.2rem 0;
+      font-size: 2.1rem;
+      letter-spacing: .02em;
+      font-weight: 800;
+      background: linear-gradient(92deg, var(--accent) 49%, var(--gold) 92%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      filter: brightness(1.3);
+      user-select: none;
+    }
+    .gallery {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.3rem 1.6rem;
+      justify-content: center;
+      padding: 2rem 1vw 0 1vw;
+    }
+    .shape-card {
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.5rem 1rem 0.7rem 1rem;
+      min-width: 200px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: box-shadow .22s, transform .22s;
+    }
+    .shape-card:hover {
+      box-shadow: var(--glow-strong), 0 0 1px #000c;
+      transform: translateY(-8px) scale(1.035);
+    }
+    .label {
+      text-align: center;
+      margin-top: 1.1rem;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: .05em;
+      opacity: 0.81;
+    }
+    .halo-ring {
+      position: absolute;
+      left: 50%; top: 54px;
+      transform: translateX(-50%);
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(from 120deg, var(--accent) 6%, var(--gold) 24%, #222732bb 80%, var(--accent) 91%, transparent 100%);
+      filter: blur(9px);
+      opacity: 0.32;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* --- Cube --- */
+    .cube-holder {
+      width: 110px; height: 110px;
+      margin-top: 34px;
+      perspective: 540px;
+    }
+    .cube {
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      animation: cube-spin 9s linear infinite;
+      position: relative;
+    }
+    .cube-face {
+      position: absolute;
+      width: 86px; height: 86px;
+      border-radius: 12px;
+      box-shadow: var(--glow-calm);
+      background: linear-gradient(120deg, var(--accent) 55%, var(--gold) 99%);
+      border: 2px solid var(--edge);
+      opacity: 0.955;
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .cube-face:hover, .cube-face:focus-visible {
+      box-shadow: var(--glow-strong), 0 0 1px #efc988;
+      border-color: var(--gold);
+    }
+    .cube-face.front  { transform: translateZ(43px); }
+    .cube-face.back   { transform: translateZ(-43px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(43px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(43px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(43px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(43px); }
+    @keyframes cube-spin {
+      0% { transform: rotateX(28deg) rotateY(28deg); }
+      100% { transform: rotateX(388deg) rotateY(388deg); }
+    }
+
+    /* --- Torus --- */
+    .torus-holder {
+      width: 120px; height: 120px;
+      margin-top: 32px;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .torus {
+      width: 100px; height: 100px;
+      position: relative;
+      border-radius: 50%;
+      background: radial-gradient(circle at 65% 35%, var(--accent) 57%, #222732 96%);
+      box-shadow: 0 0 40px #46dfaf1b, 0 3px 20px #10100966;
+      overflow: visible;
+      z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .torus::before {
+      content: "";
+      position: absolute;
+      left: 15%; top: 15%;
+      width: 70%; height: 70%;
+      border-radius: 50%;
+      background: var(--bg-main);
+      z-index: 2;
+      filter: blur(0.5px);
+    }
+    .torus-shine {
+      position: absolute;
+      top: 20px; left: 32px;
+      width: 32px; height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(120deg, #fff5 60%, transparent 100%);
+      opacity: .93;
+      pointer-events: none;
+      z-index: 5;
+      filter: blur(1px);
+    }
+    .torus-shadow {
+      position: absolute; bottom: -20px; left: 12px;
+      width: 75px; height: 20px;
+      background: radial-gradient(ellipse at 44% 60%, #4cca9757 71%, transparent 100%);
+      filter: blur(3px);
+      z-index: 0;
+      opacity: 0.66;
+    }
+
+    /* --- Quantum Flux (Replaces Dodecahedron) --- */
+    .quantum-flux-holder {
+      width: 120px;
+      height: 120px;
+      margin-top: 30px;
+      perspective: 700px; /* Slightly adjusted perspective */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden; /* To contain particles */
+    }
+
+    .quantum-flux {
+      width: 90px;
+      height: 90px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: flux-pulse 8s ease-in-out infinite alternate;
+      border-radius: 50%; /* Base shape is a sphere */
+      background: radial-gradient(circle at 50% 50%, var(--flux-color-1) 10%, transparent 80%);
+      box-shadow: var(--flux-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: blur(0.5px); /* Soft blur for gaseous look */
+    }
+
+    /* Inner core glow */
+    .quantum-flux::before {
+        content: '';
+        position: absolute;
+        width: 70%;
+        height: 70%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 50% 50%, var(--flux-color-2) 10%, transparent 70%);
+        filter: blur(8px);
+        opacity: 0.8;
+        animation: inner-glow 4s ease-in-out infinite alternate;
+    }
+
+    /* Shimmering particles/gas effect */
+    .quantum-flux::after {
+        content: '';
+        position: absolute;
+        inset: -10px; /* Extend slightly beyond for outer glow */
+        border-radius: 50%;
+        background: radial-gradient(circle at 70% 30%, var(--flux-sparkle-color) 0% 5%, transparent 15%),
+                    radial-gradient(circle at 20% 80%, var(--flux-color-3) 0% 5%, transparent 15%),
+                    radial-gradient(circle at 85% 60%, var(--flux-color-1) 0% 3%, transparent 10%);
+        background-size: 30% 30%, 25% 25%, 20% 20%;
+        background-repeat: repeat;
+        animation: flux-shimmer 15s linear infinite;
+        opacity: 0.4;
+        filter: blur(1px);
+        mix-blend-mode: screen; /* For luminous effect */
+    }
+
+    @keyframes flux-pulse {
+      0% { transform: scale(1) rotateY(0deg); box-shadow: var(--flux-shadow); }
+      50% { transform: scale(1.05) rotateY(180deg); box-shadow: 0 0 45px var(--flux-color-1), 0 0 30px var(--flux-color-2); }
+      100% { transform: scale(1) rotateY(360deg); box-shadow: var(--flux-shadow); }
+    }
+
+    @keyframes inner-glow {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(0.95); opacity: 0.95; }
+    }
+
+    @keyframes flux-shimmer {
+        0% { background-position: 0% 0%, 50% 50%, 100% 100%; }
+        100% { background-position: 100% 100%, 0% 0%, 50% 50%; }
+    }
+
+    /* Hover effect for Quantum Flux */
+    .quantum-flux:hover, .quantum-flux:focus-visible {
+      box-shadow: 0 0 60px var(--flux-color-1), 0 0 40px var(--flux-color-2), 0 0 20px var(--flux-color-3);
+      transform: scale(1.08) rotateY(10deg); /* Slight scale and tilt */
+      filter: blur(0); /* Less blur on hover */
+      cursor: pointer;
+    }
+
+
+    /* --- 3D Star --- */
+    .star-holder {
+      width: 120px; height: 120px;
+      margin-top: 30px;
+      perspective: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .star-visual {
+      width: 100px; height: 100px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 63% 38%, 100% 38%, 69% 59%, 82% 100%, 50% 75%, 18% 100%, 31% 59%, 0% 38%, 37% 38%);
+      box-shadow: var(--glow-calm), 0 6px 24px #2cffea36;
+      transition: filter 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 2;
+      animation: starTwist 10s linear infinite;
+      transform-style: preserve-3d;
+      transform: rotateX(15deg) rotateY(0deg);
+    }
+    .star-visual::before, .star-visual::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--accent);
+      clip-path: inherit;
+      opacity: 0.7;
+      transform-origin: center center;
+    }
+    .star-visual::before {
+      transform: translateZ(-8px) rotateX(15deg);
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    .star-visual::after {
+      transform: translateZ(8px) rotateX(-15deg);
+      background: var(--accent);
+      opacity: 0.8;
+    }
+    @keyframes starTwist {
+      0% { transform: rotateX(15deg) rotateY(0deg); }
+      100% { transform: rotateX(15deg) rotateY(360deg); }
+    }
+
+    /* --- Advanced Spiraled Helix --- */
+    .helix-holder {
+      width: 120px;
+      height: 120px;
+      margin-top: 30px;
+      perspective: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .helix {
+      width: 60px; height: 100px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: helix-twist 5s linear infinite;
+    }
+    .helix-segment {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #3348ff;
+      border-radius: 50%;
+      box-shadow: var(--glow-calm);
+      transition: box-shadow var(--transition);
+    }
+    .helix-segment:hover, .helix-segment:focus-visible {
+      box-shadow: var(--glow-strong);
+      cursor: pointer;
+      outline: 2px solid #1e88e5;
+      outline-offset: 4px;
+    }
+    .helix-segment.alt {
+      background: #3fa999;
+    }
+    .helix-segment.pos1 { transform: rotateY(0deg) translateX(25px) translateY(0px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos1 { transform: rotateY(180deg) translateX(25px) translateY(0px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos2 { transform: rotateY(30deg) translateX(25px) translateY(8px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos2 { transform: rotateY(210deg) translateX(25px) translateY(8px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos3 { transform: rotateY(60deg) translateX(25px) translateY(16px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos3 { transform: rotateY(240deg) translateX(25px) translateY(16px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos4 { transform: rotateY(90deg) translateX(25px) translateY(24px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos4 { transform: rotateY(270deg) translateX(25px) translateY(24px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos5 { transform: rotateY(120deg) translateX(25px) translateY(32px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos5 { transform: rotateY(300deg) translateX(25px) translateY(32px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos6 { transform: rotateY(150deg) translateX(25px) translateY(40px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos6 { transform: rotateY(330deg) translateX(25px) translateY(40px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos7 { transform: rotateY(180deg) translateX(25px) translateY(48px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos7 { transform: rotateY(360deg) translateX(25px) translateY(48px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos8 { transform: rotateY(210deg) translateX(25px) translateY(56px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos8 { transform: rotateY(390deg) translateX(25px) translateY(56px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos9 { transform: rotateY(240deg) translateX(25px) translateY(64px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos9 { transform: rotateY(420deg) translateX(25px) translateY(64px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos10 { transform: rotateY(270deg) translateX(25px) translateY(72px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos10 { transform: rotateY(450deg) translateX(25px) translateY(72px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos11 { transform: rotateY(300deg) translateX(25px) translateY(80px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos11 { transform: rotateY(480deg) translateX(25px) translateY(80px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-segment.pos12 { transform: rotateY(330deg) translateX(25px) translateY(88px) translateZ(0) scale(1); top:0; left:15px; }
+    .helix-segment.alt.pos12 { transform: rotateY(510deg) translateX(25px) translateY(88px) translateZ(0) scale(1); top:0; left:40px; }
+    .helix-bar {
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, #7722ff 0%, #1aa8e5 100%);
+      border-radius: 2px;
+      opacity: 0.7;
+      left: 22px;
+      top: 5px;
+      transition: opacity 0.3s;
+    }
+    .helix-bar.pos1 { top: 6px; }
+    .helix-bar.pos2 { top: 14px; }
+    .helix-bar.pos3 { top: 22px; }
+    .helix-bar.pos4 { top: 30px; }
+    .helix-bar.pos5 { top: 38px; }
+    .helix-bar.pos6 { top: 46px; }
+    .helix-bar.pos7 { top: 54px; }
+    .helix-bar.pos8 { top: 62px; }
+    .helix-bar.pos9 { top: 70px; }
+    .helix-bar.pos10 { top: 78px; }
+    .helix-bar.pos11 { top: 86px; }
+    .helix-bar.pos12 { top: 94px; }
+    @keyframes helix-twist {
+      0% { transform: rotateX(10deg) rotateY(0deg); }
+      100% { transform: rotateX(10deg) rotateY(360deg); }
+    }
+
+    /* --- Responsive, focus, a11y --- */
+    @media (max-width:1050px) { .gallery{ gap:1.5rem 1rem;} }
+    @media (max-width:800px) {
+      .gallery{ gap:1.1rem 1vw;}
+      .shape-card{ min-width:160px;}
+    }
+    @media (max-width:600px) {
+      header{ font-size:1.1rem; padding-top:1.6rem;}
+      .gallery{ flex-direction:column; align-items:center;gap:1.5rem;}
+      .shape-card{min-width:140px;}
+      .halo-ring{ width:78px;height:78px;}
+    }
+    .cube-face:focus-visible,
+    .quantum-flux:focus-visible, /* Updated focus selector */
+    .star-visual:focus-visible,
+    .helix-segment:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+  </style>
+</head>
+<body>
+      <header class="back-nav">
+        <h1>Minimalistic 3D CSS Gallery</h1>
+
+    <a href="index.html" aria-label="Back to Main Projects">← Return</a>
+  </header>
+  <main class="gallery">
+    <section class="shape-card">
+      <div class="halo-ring"></div>
+      <div class="cube-holder">
+        <div class="cube">
+          <div class="cube-face front" tabindex="0" aria-label="Cube front"></div>
+          <div class="cube-face back" tabindex="0" aria-label="Cube back"></div>
+          <div class="cube-face right" tabindex="0" aria-label="Cube right"></div>
+          <div class="cube-face left" tabindex="0" aria-label="Cube left"></div>
+          <div class="cube-face top" tabindex="0" aria-label="Cube top"></div>
+          <div class="cube-face bottom" tabindex="0" aria-label="Cube bottom"></div>
+        </div>
+      </div>
+      <div class="label">Cube</div>
+    </section>
+    <section class="shape-card">
+      <div class="halo-ring"></div>
+      <div class="torus-holder">
+        <div class="torus">
+          <div class="torus-shadow"></div>
+          <div class="torus-shine"></div>
+        </div>
+      </div>
+      <div class="label">Torus</div>
+    </section>
+    <section class="shape-card">
+      <div class="halo-ring"></div>
+      <div class="quantum-flux-holder">
+        <div class="quantum-flux" tabindex="0" aria-label="Quantum Flux sphere with sparkling gas">
+            </div>
+      </div>
+      <div class="label">Quantum Flux</div>
+    </section>
+    <section class="shape-card">
+      <div class="halo-ring"></div>
+      <div class="star-holder">
+        <div class="star-visual" tabindex="0" aria-label="5-point 3D Star"></div>
+      </div>
+      <div class="label">3D Star</div>
+    </section>
+    <section class="shape-card">
+      <div class="halo-ring"></div>
+      <div class="helix-holder">
+        <div class="helix" tabindex="0" aria-label="Cylindrical Helix">
+          <div class="helix-segment pos1" tabindex="0"></div>
+          <div class="helix-segment alt pos1" tabindex="0"></div>
+          <div class="helix-bar pos1"></div>
+          <div class="helix-segment pos2" tabindex="0"></div>
+          <div class="helix-segment alt pos2" tabindex="0"></div>
+          <div class="helix-bar pos2"></div>
+          <div class="helix-segment pos3" tabindex="0"></div>
+          <div class="helix-segment alt pos3" tabindex="0"></div>
+          <div class="helix-bar pos3"></div>
+          <div class="helix-segment pos4" tabindex="0"></div>
+          <div class="helix-segment alt pos4" tabindex="0"></div>
+          <div class="helix-bar pos4"></div>
+          <div class="helix-segment pos5" tabindex="0"></div>
+          <div class="helix-segment alt pos5" tabindex="0"></div>
+          <div class="helix-bar pos5"></div>
+          <div class="helix-segment pos6" tabindex="0"></div>
+          <div class="helix-segment alt pos6" tabindex="0"></div>
+          <div class="helix-bar pos6"></div>
+          <div class="helix-segment pos7" tabindex="0"></div>
+          <div class="helix-segment alt pos7" tabindex="0"></div>
+          <div class="helix-bar pos7"></div>
+          <div class="helix-segment pos8" tabindex="0"></div>
+          <div class="helix-segment alt pos8" tabindex="0"></div>
+          <div class="helix-bar pos8"></div>
+          <div class="helix-segment pos9" tabindex="0"></div>
+          <div class="helix-segment alt pos9" tabindex="0"></div>
+          <div class="helix-bar pos9"></div>
+          <div class="helix-segment pos10" tabindex="0"></div>
+          <div class="helix-segment alt pos10" tabindex="0"></div>
+          <div class="helix-bar pos10"></div>
+          <div class="helix-segment pos11" tabindex="0"></div>
+          <div class="helix-segment alt pos11" tabindex="0"></div>
+          <div class="helix-bar pos11"></div>
+          <div class="helix-segment pos12" tabindex="0"></div>
+          <div class="helix-segment alt pos12" tabindex="0"></div>
+          <div class="helix-bar pos12"></div>
+        </div>
+      </div>
+      <div class="label">Cylindrical Helix</div>
+    </section>
+  </main>
+</body>
+</html>

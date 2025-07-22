@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 8: Dynamic Knowledge Matrix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for a Unified & Sophisticated Palette */
+        :root {
+            --bg-gradient-start: #1a1a2e; /* Deep dark blue-violet */
+            --bg-gradient-end: #0c0c1a;   /* Even darker blue-violet */
+            --header-bg: rgba(0, 0, 0, 0.7); /* Translucent dark header */
+            --header-text: #e0e0e0; /* Off-white for header text */
+            --header-link-color: #00bcd4; /* Bright cyan for navigation */
+            --header-link-hover: #00e0ff; /* Lighter cyan on hover */
+            
+            --gallery-container-bg: rgba(15, 15, 30, 0.8); /* Darker translucent container */
+            --gallery-shadow: rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            --gallery-title-color: #ffeb3b; /* Vibrant gold for titles */
+            --gallery-title-shadow: rgba(255, 235, 59, 0.5);
+            
+            --card-base-shadow: rgba(0, 0, 0, 0.4); /* Stronger default card shadow */
+            --card-front-gradient-start: #3f51b5; /* Deep indigo */
+            --card-front-gradient-end: #283593;   /* Darker indigo */
+            --card-back-gradient-start: #d84315; /* Rich burnt orange */
+            --card-back-gradient-end: #bf360c;   /* Darker burnt orange */
+            
+            --card-text-color: #e0e0e0; /* Light text for card content */
+            --card-heading-color: #ffffff; /* Pure white for card headings */
+
+            --bullet-color: #00bcd4; /* Cyan for list bullets */
+            --code-bg: rgba(0,0,0,0.3);
+            --code-color: #ffeb3b; /* Gold for code */
+
+            --button-bg: #4CAF50; /* Green button */
+            --button-hover-bg: #45a049;
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            color: var(--card-text-color);
+            position: relative;
+            /* Animated subtle background grid */
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: bgGridFlow 20s linear infinite;
+        }
+
+        @keyframes bgGridFlow {
+            from { background-position: 0 0; }
+            to { background-position: 400px 400px; }
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: var(--header-bg);
+            padding: 18px 35px; /* Larger padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--header-link-color); /* Cyan border */
+            backdrop-filter: blur(10px); /* More pronounced frosted glass */
+        }
+
+        .back-nav a {
+            color: var(--header-link-color);
+            text-decoration: none;
+            font-weight: 700; /* Bolder */
+            font-size: 1.15rem; /* Slightly larger */
+            transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease;
+            text-shadow: 0 0 8px rgba(0, 188, 212, 0.6); /* Subtle cyan glow */
+        }
+
+        .back-nav a:hover {
+            color: var(--header-link-hover);
+            transform: translateY(-2px); /* More noticeable lift */
+            text-shadow: 0 0 12px rgba(0, 224, 255, 0.8); /* Brighter cyan glow */
+        }
+
+        .back-nav h1 {
+            font-family: 'Montserrat', sans-serif; /* Strong, clean font */
+            color: var(--header-text);
+            font-size: 1.8rem; /* Larger */
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            letter-spacing: 0.1em; /* Spaced out */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* Subtle white aura */
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            margin-top: 120px; /* More space for fixed header */
+            padding: 40px; /* More padding */
+            text-align: center;
+            max-width: 1400px; /* **BIGGER CONTAINER** */
+            width: 90%;
+            background-color: var(--gallery-container-bg);
+            border-radius: 15px; /* More rounded */
+            box-shadow: 0 15px 40px var(--gallery-shadow), inset 0 0 25px rgba(0, 188, 212, 0.1); /* Deeper shadow, subtle inner cyan glow */
+            margin-bottom: 70px;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+        }
+
+        .gallery-container h2 {
+            font-family: 'Montserrat', sans-serif; /* Consistent header font */
+            font-size: clamp(2.5rem, 5vw, 3.5rem); /* Larger and more impactful */
+            color: var(--gallery-title-color);
+            margin-bottom: 30px; /* Space between main title and button/grid */
+            text-shadow: 0 0 15px var(--gallery-title-shadow), 0 0 25px rgba(255, 235, 59, 0.3); /* Enhanced gold glow */
+            letter-spacing: 0.08em; /* Spaced out */
+        }
+
+        /* Flip All Button */
+        .flip-all-button {
+            background-color: var(--button-bg);
+            color: #fff;
+            border: none;
+            padding: 10px 20px; /* Slightly larger for better clickability */
+            border-radius: 8px; /* More rounded */
+            cursor: pointer;
+            font-size: 1rem; /* readable size */
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            margin-bottom: 40px; /* Space between button and card grid */
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .flip-all-button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* **BIGGER CARDS** Minimum width increased */
+            gap: 35px; /* Increased gap */
+            perspective: 1200px; /* Stronger perspective */
+        }
+
+        /* Card Flip Effect */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 280px; /* **TALLER CARDS** Increased height to fit more info */
+            border-radius: 18px; /* More rounded */
+            box-shadow: 0 12px 25px var(--card-base-shadow), 0 0 15px rgba(0, 188, 212, 0.2); /* Enhanced shadow with subtle glow */
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Springy flip transition */
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        /* Global flip for all cards */
+        .card-grid.flipped .flip-card {
+            transform: rotateY(180deg) scale(1.02); /* Apply flipped state to all cards, subtle scale */
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 188, 212, 0.7); /* Maintain strong shadow/glow when globally flipped */
+        }
+
+        .flip-card:hover:not(.flipped) { /* Only apply hover scale if not globally flipped */
+            transform: rotateY(180deg) scale(1.02); /* Flip and subtle scale on hover */
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 188, 212, 0.7); /* Stronger shadow and glow on hover */
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            /* transition: transform 0.8s; - This transition is not needed directly here as it's controlled by parent .flip-card */
+            transform-style: preserve-3d;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px; /* Consistent rounding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px; /* **MORE PADDING** for content */
+            box-sizing: border-box;
+            color: var(--card-text-color);
+            font-size: 1.15rem; /* **LARGER FONT** for better readability */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle internal border for definition */
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.08); /* Subtle inner light */
+            text-shadow: 0 0 5px rgba(0,0,0,0.3); /* Subtle text shadow for depth */
+            line-height: 1.5; /* **MORE SPACE BETWEEN LINES** */
+            text-align: center; /* Default text alignment */
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, var(--card-front-gradient-start), var(--card-front-gradient-end));
+            z-index: 2;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, var(--card-back-gradient-start), var(--card-back-gradient-end));
+            transform: rotateY(180deg);
+        }
+
+        .card-front h3, .card-back h3 {
+            font-family: 'Montserrat', sans-serif; /* Consistent heading font */
+            font-size: 1.8rem; /* **LARGER HEADING** */
+            margin-top: 0;
+            margin-bottom: 20px; /* More space */
+            color: var(--card-heading-color);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4); /* Stronger white glow */
+            line-height: 1.2; /* Tighter line height for headings */
+        }
+
+        .card-front p {
+            font-size: 1.1rem; /* Slightly larger paragraph text on front */
+            opacity: 0.95;
+            line-height: 1.5; /* Good line height */
+        }
+
+        .card-back p, .card-back ul {
+            font-size: 1rem; /* Base size for back content */
+            opacity: 0.95;
+            line-height: 1.4; /* Tighter line height for list items */
+            margin: 0; /* Remove default margin for p/ul */
+            padding: 0; /* Remove default padding for ul */
+            list-style: none; /* Remove default bullets */
+            text-align: left; /* **ALIGN LIST ITEMS TO LEFT** */
+            width: 100%; /* Ensure content fills width */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        .card-back ul {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* **MORE SPACE BETWEEN LIST ITEMS** */
+            margin-top: 15px; /* More space above list */
+        }
+
+        .card-back ul li {
+            padding-left: 1.5em; /* Space for custom bullet point */
+            position: relative;
+        }
+
+        .card-back ul li::before {
+            content: '• '; /* Custom bullet point */
+            color: var(--bullet-color); /* **VIBRANT CYAN BULLET POINT** */
+            font-weight: bold;
+            font-size: 1.2em; /* Larger bullet point */
+            position: absolute;
+            left: 0;
+            top: 0; /* Align with text */
+            line-height: inherit; /* Inherit line height for vertical alignment */
+        }
+
+        .card-back code {
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-family: 'monospace';
+            font-size: 0.9em;
+            color: var(--code-color); /* **VIBRANT GOLD FOR CODE SNIPPETS** */
+            text-shadow: none;
+            white-space: nowrap; /* Prevent code snippets from breaking */
+            overflow-x: auto; /* Allow horizontal scroll for long code */
+            display: inline-block; /* Essential for overflow on small screens */
+            max-width: 100%; /* Constraint to parent width */
+            line-height: 1.2; /* Tighter for code */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) { /* Adjust breakpoint for new larger size */
+            .gallery-container {
+                max-width: 1100px;
+                padding: 35px;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 30px;
+            }
+            .flip-card {
+                height: 260px;
+            }
+            .card-front h3, .card-back h3 {
+                font-size: 1.6rem;
+            }
+            .card-front p {
+                font-size: 1rem;
+            }
+            .card-back p, .card-back ul {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 992px) { /* Medium screens */
+            .gallery-container {
+                padding: 30px;
+                margin-top: 100px;
+                max-width: 90%;
+            }
+            .gallery-container h2 {
+                font-size: clamp(2.2rem, 5vw, 3rem);
+                margin-bottom: 25px;
+            }
+            .flip-all-button {
+                margin-bottom: 30px;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            .flip-card {
+                height: 240px;
+            }
+            .card-front h3, .card-back h3 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            .card-front p {
+                font-size: 0.95rem;
+            }
+            .card-back p, .card-back ul {
+                font-size: 0.9rem;
+                line-height: 1.3;
+            }
+            .card-back ul {
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 768px) { /* Small tablet/large phone */
+            .gallery-container {
+                padding: 25px;
+                margin-top: 90px;
+            }
+            .gallery-container h2 {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                margin-bottom: 25px;
+            }
+            .flip-all-button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                margin-bottom: 25px;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+            }
+            .flip-card {
+                height: 220px; /* Reduced height slightly */
+                border-radius: 15px;
+            }
+            .card-front, .card-back {
+                padding: 20px; /* Reduced padding */
+                font-size: 1rem;
+            }
+            .card-front h3, .card-back h3 {
+                font-size: 1.3rem;
+                margin-bottom: 12px;
+            }
+            .card-front p {
+                font-size: 0.9rem;
+            }
+            .card-back p, .card-back ul {
+                font-size: 0.85rem;
+                line-height: 1.25;
+            }
+            .card-back ul {
+                gap: 5px;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 576px) { /* Smallest phones */
+            .back-nav h1 {
+                font-size: 1.3rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+                padding: 6px 12px;
+            }
+            .gallery-container {
+                padding: 15px;
+                margin-top: 75px;
+            }
+            .gallery-container h2 {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                margin-bottom: 20px;
+            }
+            .flip-all-button {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+            }
+            .card-grid {
+                grid-template-columns: 1fr; /* Single column layout */
+                gap: 15px;
+            }
+            .flip-card {
+                height: 200px; /* Further reduced height for small screens */
+                border-radius: 12px;
+            }
+            .card-front, .card-back {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+            .card-front h3, .card-back h3 {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+            .card-front p {
+                font-size: 0.85rem;
+            }
+            .card-back p, .card-back ul {
+                font-size: 0.8rem;
+                line-height: 1.2;
+            }
+            .card-back ul {
+                gap: 4px;
+                margin-top: 8px;
+            }
+            .card-back ul li {
+                padding-left: 1.2em;
+            }
+            .card-back ul li::before {
+                font-size: 1.1em;
+            }
+            .card-back code {
+                font-size: 0.8em;
+                padding: 2px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Dynamic Knowledge Matrix</h1>
+        <a href="index.html">Exit</a>
+    </header>
+
+    <div class="gallery-container">
+        <h2>Advanced Web Principles: The Codex</h2>
+        <button class="flip-all-button" id="flipAllBtn">Reveal All Insights</button>
+        <div class="card-grid" id="cardGrid">
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Semantic HTML5</h3>
+                    <p>Build accessible & SEO-friendly web structures.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Why It Matters</h3>
+                    <ul>
+                        <li>Use tags like `<code>&lt;article&gt;</code>`, `<code>&lt;nav&gt;</code>`, `<code>&lt;main&gt;</code>`.</li>
+                        <li>Improves clarity for developers and search engines.</li>
+                        <li>Essential for screen readers & accessibility.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>CSS Custom Properties</h3>
+                    <p>Dynamic theming & efficient stylesheet management.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Quick Guide</h3>
+                    <ul>
+                        <li>Define values: `<code>--main-color: #007bff;</code>`</li>
+                        <li>Use them: `<code>color: var(--main-color);</code>`</li>
+                        <li>Great for dark/light themes & easy updates.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Advanced Selectors</h3>
+                    <p>Precision targeting for granular styling control.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Unlock Power</h3>
+                    <ul>
+                        <li>`<code>:nth-child()</code>`: Target specific list items.</li>
+                        <li>`<code>[attr*=val]</code>`: Select elements with specific text in attributes.</li>
+                        <li>`<code>:has()</code>`: Style a parent based on its child (cutting-edge!).</li>
+                        <li>`<code>:is()</code>`: Group selectors for shorter, cleaner code.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>CSS Transforms & 3D</h3>
+                    <p>Craft immersive visual depth & dynamic motion.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Make It Pop!</h3>
+                    <ul>
+                        <li>Make elements 3D with `<code>transform-style: preserve-3d;</code>`</li>
+                        <li>Control depth perspective on the parent with `<code>perspective</code>`.</li>
+                        <li>Rotate and move elements in 3D: `<code>rotateX()</code>`, `<code>translateZ()</code>`.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Complex Animations</h3>
+                    <p>Orchestrating intricate motion sequences with `@keyframes`.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Go Beyond Basic</h3>
+                    <ul>
+                        <li>Create multi-step animations with `@keyframes`.</li>
+                        <li>Control speed curves: `<code>cubic-bezier()</code>` for non-linear timing.</li>
+                        <li>Make animations play once: `<code>animation-fill-mode: forwards;</code>`</li>
+                        <li>Pause/play: `<code>animation-play-state</code>`.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>CSS Grid & Subgrid</h3>
+                    <p>Revolutionizing complex two-dimensional layouts.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Master Layout</h3>
+                    <ul>
+                        <li>Build powerful layouts with `<code>grid-template-areas</code>`.</li>
+                        <li>`<code>subgrid</code>` lets nested grids align perfectly with the parent (a 'grid-within-a-grid' concept).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Blending Modes & Filters</h3>
+                    <p>Achieving sophisticated visual effects directly in CSS.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Visual Magic</h3>
+                    <ul>
+                        <li>`<code>mix-blend-mode</code>`: Create effects like overlay, multiply, screen for layered elements.</li>
+                        <li>`<code>filter</code>`: Apply visual adjustments like blur, grayscale, hue shift (like Instagram filters).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Responsive Images & Art Direction</h3>
+                    <p>Delivering optimal visuals across diverse viewports.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Image Optimization</h3>
+                    <ul>
+                        <li>Use `<code>&lt;picture&gt;</code>` tag for different image sources based on screen size.</li>
+                        <li>`<code>srcset</code>` and `<code>sizes</code>` provide multiple image versions for browser to pick best.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Flexbox Layout</h3>
+                    <p>Easy, one-dimensional layout for aligning items.</p>
+                </div>
+                <div class="card-back">
+                    <h3>How It Works</h3>
+                    <ul>
+                        <li>Apply `<code>display: flex;</code>` to a container.</li>
+                        <li>Align items horizontally with `<code>justify-content</code>`.</li>
+                        <li>Align items vertically with `<code>align-items</code>`.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Media Queries</h3>
+                    <p>Make your design responsive on any device.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Breakpoint Power</h3>
+                    <ul>
+                        <li>Change layout for different screen sizes.</li>
+                        <li>Example: `<code>@media (max-width: 768px) { /* CSS for tablets and phones */ }</code>`</li>
+                        <li>Design 'mobile-first' for better performance.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Web Accessibility</h3>
+                    <p>Build inclusive websites for everyone.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Tips for Access</h3>
+                    <ul>
+                        <li>Add `<code>alt</code>` text to images (important for screen readers).</li>
+                        <li>Use proper semantic tags: `<code>&lt;button&gt;</code>`, `<code>&lt;nav&gt;</code>`, `<code>&lt;main&gt;</code>`.</li>
+                        <li>`<code>aria-</code>` attributes give extra info to assistive technologies.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>HTML Forms & Inputs</h3>
+                    <p>Collect user input with ease.</p>
+                </div>
+                <div class="card-back">
+                    <h3>New Input Types</h3>
+                    <ul>
+                        <li>`<code>type="email"</code>`: Auto-validates email format.</li>
+                        <li>`<code>type="range"</code>`: Slider for number input.</li>
+                        <li>`<code>type="date"</code>`: Built-in calendar picker.</li>
+                        <li>These improve user experience & basic validation.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Transitions & Easing</h3>
+                    <p>Animate smoothly between property values.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Effortless Animation</h3>
+                    <ul>
+                        <li>Add `<code>transition: all 0.3s ease-in-out;</code>` to an element.</li>
+                        <li>When its properties change (e.g., on hover), they'll animate smoothly.</li>
+                        <li>'Easing' functions control the animation's speed curve.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Web Fonts & Typography</h3>
+                    <p>Use Google Fonts for stylish text.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Smart Font Loading</h3>
+                    <ul>
+                        <li>Only load the font weights you actually use.</li>
+                        <li>Example: `<code>&lt;link href="...Montserrat:wght@400;700&display=swap"&gt;</code>`</li>
+                        <li>This keeps your page loading fast.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>HTML Meta Tags</h3>
+                    <p>Help browsers and search engines understand your page.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Key Tags</h3>
+                    <ul>
+                        <li>`<code>&lt;meta name="description"&gt;</code>`: A summary for search results.</li>
+                        <li>`<code>&lt;meta name="viewport"&gt;</code>`: Crucial for making your site responsive on all devices.</li>
+                        <li>Open Graph tags: Control how your page looks when shared on social media.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="card-front">
+                    <h3>Z-Index & Stacking Context</h3>
+                    <p>Control which elements appear on top of others.</p>
+                </div>
+                <div class="card-back">
+                    <h3>Layering Logic</h3>
+                    <ul>
+                        <li>Higher `<code>z-index</code>` means the element is in front.</li>
+                        <li>For `<code>z-index</code>` to work, the element needs a `<code>position</code>` (e.g., `relative`, `absolute`).</li>
+                        <li>CSS `<code>transform</code>` also creates a stacking context.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const flipAllBtn = document.getElementById('flipAllBtn');
+            const cardGrid = document.getElementById('cardGrid');
+
+            let allFlipped = false;
+
+            flipAllBtn.addEventListener('click', () => {
+                if (allFlipped) {
+                    cardGrid.classList.remove('flipped');
+                    flipAllBtn.textContent = 'Reveal All Insights'; // Changed button text
+                } else {
+                    cardGrid.classList.add('flipped');
+                    flipAllBtn.textContent = 'Hide All Insights'; // Changed button text
+                }
+                allFlipped = !allFlipped;
+            });
+        });
+    </script>
+        <footer>
+        <p><span style="color:black;font-weight:bold;">© 2025 Elite CSS Portfolio.<br> Crafted with precision and creativity.</span></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 5: Cybernetic Command Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Global Control and Calculations */
+        :root {
+            --green-primary: #00ff00;
+            --green-glow-strong: rgba(0, 255, 0, 0.8);
+            --green-glow-subtle: rgba(0, 255, 0, 0.4);
+            --amber-primary: #ffcc00;
+            --amber-glow: rgba(255, 204, 0, 0.9);
+            --red-primary: #ff0000;
+            --red-glow: rgba(255, 0, 0, 0.9);
+            --cyan-accent: #00ffff; /* Added Cyan for specific highlights */
+            --cyan-glow: rgba(0, 255, 255, 0.7); /* Added Cyan glow */
+            --dark-bg-start: #050505;
+            --dark-bg-end: #101010;
+            --terminal-border-thickness: 3px;
+            --cursor-width: 0.15em;
+            --cursor-blink-speed: 0.75s;
+            --font-size-base: 1.15rem;
+            --line-height-base: 1.6;
+
+            /* Animation timing for content 'dump' */
+            --dump-duration: 0.05s; /* Very fast for "instant" dump */
+            --dump-delay-per-line: 0.03s; /* Delay between each line appearing */
+            --block-delay: 0.3s; /* Delay between larger blocks of information */
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'VT323', monospace;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right bottom, var(--dark-bg-start), var(--dark-bg-end));
+            color: var(--green-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: var(--line-height-base);
+            font-size: var(--font-size-base);
+            overflow-x: hidden;
+            text-shadow: 0 0 7px var(--green-glow-strong), 0 0 10px var(--green-glow-subtle);
+            
+            /* Simulated scan lines for CRT effect */
+            background-image:
+                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.02) 1px, transparent 1px);
+            background-size: 100% 2px, 2px 100%;
+            background-repeat: repeat-y, repeat-x;
+            animation: scanLineMove 10s linear infinite;
+            position: relative; /* For glitch effect */
+        }
+
+        /* Global Glitch Effect (subtle, background-level) */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 0, 0.01) 0px,
+                transparent 1px,
+                transparent 3px,
+                rgba(0, 255, 0, 0.01) 4px
+            );
+            mix-blend-mode: overlay;
+            opacity: 0.1;
+            z-index: 9999;
+            animation: glitchLines 0.1s steps(1) infinite;
+        }
+
+        @keyframes glitchLines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 calc(var(--line-height-base) * -1em); }
+        }
+
+        @keyframes scanLineMove {
+            from { background-position: 0% 0%; }
+            to { background-position: 0% 100%; }
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: #000000;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            border-bottom: var(--terminal-border-thickness) solid var(--green-primary);
+            text-shadow: 0 0 5px var(--green-glow-strong);
+        }
+
+        .back-nav a {
+            color: var(--amber-primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px var(--amber-glow);
+            transition: color 0.3s ease, transform 0.2s ease;
+            letter-spacing: 0.05em;
+        }
+
+        .back-nav a:hover {
+            color: #ffaa00; /* Darker amber on hover */
+            transform: scale(1.08);
+        }
+
+        .back-nav h1 {
+            color: var(--green-primary);
+            font-size: 1.6rem;
+            margin: 0;
+            text-shadow: 0 0 8px var(--green-glow-strong);
+            letter-spacing: 0.08em;
+        }
+
+        /* Terminal Screen Container */
+        .terminal-screen {
+            background-color: rgba(0, 0, 0, 0.95);
+            border: var(--terminal-border-thickness) solid var(--green-primary);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 30px var(--green-glow-strong), inset 0 0 15px rgba(0, 255, 0, 0.3);
+            max-width: 900px;
+            width: 90%;
+            margin-top: 120px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden; /* Hide overflow for content reveal */
+            
+            background-image:
+                linear-gradient(rgba(0, 255, 0, 0.08) 1px, transparent 1px),
+                radial-gradient(ellipse at center, rgba(0, 255, 0, 0.01) 0%, transparent 100%);
+            background-size: 100% 2px, 100% 100%;
+            animation: screenNoise 0.5s steps(2) infinite, scanLinePulse 5s linear infinite;
+        }
+
+        /* Simulated Bezel Glow */
+        .terminal-screen::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            right: -2px; bottom: -2px;
+            border: 2px solid rgba(0, 255, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.2);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes screenNoise {
+            0%, 100% { background-position: 0 0; }
+            50% { background-position: 0 1px; }
+        }
+        @keyframes scanLinePulse {
+            0%, 100% { background-image: linear-gradient(rgba(0, 255, 0, 0.08) 1px, transparent 1px); }
+            50% { background-image: linear-gradient(rgba(0, 255, 0, 0.12) 1px, transparent 1px); }
+        }
+
+        .terminal-screen::before {
+            content: 'C:\\SYSTEM>_';
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1em;
+            color: var(--amber-primary);
+            text-shadow: 0 0 5px var(--amber-glow);
+            z-index: 1;
+        }
+
+        /* Code/Content Line Styling */
+        .code-line {
+            margin-bottom: 5px; /* Tighter spacing for code */
+            white-space: pre-wrap; /* Preserve formatting and allow wrapping */
+            font-size: 0.95em; /* Slightly smaller for code detail */
+            line-height: 1.3;
+            text-shadow: 0 0 3px var(--green-glow-subtle);
+            opacity: 0; /* Start hidden for reveal animation */
+            animation: fadeInDump var(--dump-duration) forwards;
+            position: relative;
+        }
+
+        /* Colors for specific elements within code lines */
+        .code-line .comment { color: #888; text-shadow: none; } /* Grey for comments */
+        .code-line .keyword { color: var(--cyan-accent); text-shadow: 0 0 5px var(--cyan-glow); } /* Cyan for keywords */
+        .code-line .string { color: var(--amber-primary); text-shadow: 0 0 5px var(--amber-glow); } /* Amber for strings */
+        .code-line .number { color: #f0f0f0; text-shadow: 0 0 5px rgba(240,240,240,0.5); } /* White for numbers */
+        .code-line .success { color: #00ff00; text-shadow: 0 0 8px rgba(0,255,0,0.9); } /* Bright green for success */
+        .code-line .error { color: var(--red-primary); text-shadow: 0 0 8px var(--red-glow); } /* Red for error */
+
+        /* Sequential content dump animation */
+        /* Adjusted timings for a more "data stream" feel */
+        .code-block:nth-child(1) .code-line:nth-child(1) { animation-delay: 0.5s; }
+        .code-block:nth-child(1) .code-line:nth-child(2) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 1); }
+        .code-block:nth-child(1) .code-line:nth-child(3) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 2); }
+        .code-block:nth-child(1) .code-line:nth-child(4) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 3); }
+        .code-block:nth-child(1) .code-line:nth-child(5) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 4); }
+        .code-block:nth-child(1) .code-line:nth-child(6) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 5); }
+        .code-block:nth-child(1) .code-line:nth-child(7) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 6); }
+        .code-block:nth-child(1) .code-line:nth-child(8) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 7); }
+        .code-block:nth-child(1) .code-line:nth-child(9) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 8); }
+        .code-block:nth-child(1) .code-line:nth-child(10) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 9); }
+        .code-block:nth-child(1) .code-line:nth-child(11) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 10); }
+
+        /* Second block delay */
+        .code-block:nth-child(2) {
+            margin-top: 15px; /* Space between blocks */
+        }
+        .code-block:nth-child(2) .code-line:nth-child(1) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 11 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(2) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 12 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(3) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 13 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(4) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 14 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(5) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 15 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(6) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 16 + var(--block-delay)); }
+        .code-block:nth-child(2) .code-line:nth-child(7) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 17 + var(--block-delay)); }
+
+        /* Third block delay - for Final Status */
+        .code-block:nth-child(3) {
+            margin-top: 20px; /* More space for final status */
+        }
+        .code-block:nth-child(3) .code-line:nth-child(1) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 18 + var(--block-delay) * 2); }
+        .code-block:nth-child(3) .code-line:nth-child(2) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 19 + var(--block-delay) * 2); }
+        .code-block:nth-child(3) .code-line:nth-child(3) { animation-delay: calc(0.5s + var(--dump-delay-per-line) * 20 + var(--block-delay) * 2); }
+
+
+        @keyframes fadeInDump {
+            0% { opacity: 0; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Final prompt line - appears after all content dumps */
+        .final-prompt {
+            margin-top: 30px;
+            color: var(--green-primary);
+            text-shadow: 0 0 5px var(--green-glow-strong);
+            white-space: nowrap;
+            border-right: var(--cursor-width) solid var(--green-primary);
+            animation: blink-caret var(--cursor-blink-speed) step-end infinite;
+            animation-delay: calc(0.5s + var(--dump-delay-per-line) * 20 + var(--block-delay) * 2 + 1.0s); /* Delay after all previous content is dumped */
+            opacity: 0; /* Start hidden */
+            animation-fill-mode: forwards;
+            animation-name: fadeIn, blink-caret;
+            animation-duration: 0.5s, var(--cursor-blink-speed);
+            animation-timing-function: ease-in, step-end;
+            animation-iteration-count: 1, infinite;
+        }
+
+        /* Blinking text effect using @keyframes */
+        .blinking-text {
+            animation: blink 1s step-end infinite;
+            color: var(--red-primary);
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--red-glow);
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* General Fade In (for final prompt) */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Cursor */
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--green-primary); }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            color: #00b300;
+            font-size: 1rem;
+            text-shadow: 0 0 3px rgba(0, 179, 0, 0.7);
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        .footer-system-time {
+            color: var(--cyan-accent);
+            text-shadow: 0 0 5px var(--cyan-glow);
+            display: block;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .terminal-screen {
+                padding: 30px;
+                font-size: 1.05rem;
+            }
+            .back-nav h1 {
+                font-size: 1.4rem;
+            }
+            .back-nav a {
+                font-size: 1.1rem;
+            }
+            .code-line {
+                font-size: 0.9em;
+            }
+            .final-prompt {
+                 white-space: pre-wrap; /* Allow wrapping for final prompt */
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 0.95rem;
+            }
+            .terminal-screen {
+                padding: 20px;
+                margin-top: 100px;
+            }
+            .back-nav h1 {
+                font-size: 1.2rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+            }
+            .terminal-screen::before {
+                top: 10px;
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Cybernetic Command Console</h1>
+        <a href="index.html">Exit</a>
+    </header>
+
+    <div class="terminal-screen">
+        <p class="code-line terminal-prompt-initial" style="opacity: 1; animation: none;">C:\SYSTEM>_</p>
+        
+        <div class="code-block">
+            <p class="code-line"><span class="comment">// Initiating core system boot sequence...</span></p>
+            <p class="code-line"><span class="keyword">function</span> <span class="keyword">initiateSecureProtocol</span>() {</p>
+            <p class="code-line">  <span class="keyword">const</span> <span class="keyword">systemId</span> = <span class="string">'QUANTUM_ALPHA_UNIT_7'</span>;</p>
+            <p class="code-line">  <span class="keyword">let</span> <span class="keyword">status</span> = <span class="string">'INITIALIZING'</span>;</p>
+            <p class="code-line">  <span class="keyword">if</span> (checkHardware(<span class="keyword">systemId</span>) <span class="keyword">===</span> <span class="string">'OK'</span>) {</p>
+            <p class="code-line">    <span class="comment">// Load encrypted modules</span></p>
+            <p class="code-line">    loadModule(<span class="string">'security_kernel.bin'</span>, <span class="number">0xFA7E</span>);</p>
+            <p class="code-line">    loadModule(<span class="string">'network_interface.dll'</span>, <span class="number">0xDEEC</span>);</p>
+            <p class="code-line">    <span class="keyword">return</span> <span class="string">'PROTOCOL_CASCADE_ACTIVE'</span>;</p>
+            <p class="code-line">  } <span class="keyword">else</span> {</p>
+            <p class="code-line">    <span class="keyword">return</span> <span class="string">'INIT_FAILURE'</span>;</p>
+            <p class="code-line">  }</p>
+            <p class="code-line">}</p>
+        </div>
+
+        <div class="code-block">
+            <p class="code-line"><span class="comment">// Decrypting critical data stream...</span></p>
+            <p class="code-line">DECRYPT> <span class="keyword">decryptPayload</span>(<span class="string">'STREAM_0xAE3F'</span>, <span class="string">'AES_256_GCM'</span>);</p>
+            <p class="code-line">HASH_CHECK> <span class="success">PASSED</span>. Integrity verified.</p>
+            <p class="code-line">ACCESS_LEVEL> <span class="amber-primary">OMEGA</span>. Authentication complete.</p>
+            <p class="code-line">SYSTEM_LOG> Welcome, <span class="keyword">OPERATOR_0x7B5C</span>.</p>
+            <p class="code-line">EVENT> Synaptic link established. Time:<span class="string">"2025.07.22_04.00.54_IST"</span></p>
+            <p class="code-line"><span class="comment">// Ready for command input...</span></p>
+        </div>
+
+        <div class="code-block">
+            <p class="code-line">DIAGNOSTICS> Hardware: <span class="success">Optimal</span> | Software: <span class="success">Nominal</span></p>
+            <p class="code-line">NETWORK> Status: <span class="success">Online</span> | Latency: <span class="number">3ms</span> | Link: <span class="success">Secure</span></p>
+            <p class="code-line">SECURITY_ALERT> <span class="error">NONE</span>.</p>
+        </div>
+
+        <p class="final-prompt">_ <span class="blinking-text">AWAITING COMMAND INPUT...</span></p>
+    </div>
+
+    <footer>
+        <p>STATUS: ONLINE | SECTOR: QUANTUM-ALPHA | BUILD: v7.3.2<br>
+        <span class="footer-system-time">SYSTEM TIME: 2025.07.22_04.00.54_IST</span></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3: Optical Illusions / Mind Games with CSS</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Verdana', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right bottom, #3498db, #8e44ad); /* Deep blue to purple */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: #2c3e50; /* Dark blue-grey */
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-nav a:hover {
+            color: #f1c40f; /* Yellow on hover */
+        }
+
+        .back-nav h1 {
+            color: #ecf0f1;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        /* Illusion Container */
+        .illusion-container {
+            margin-top: 80px; /* Space for fixed header */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            gap: 60px; /* Space between illusion sections */
+            padding-bottom: 50px; /* Add some padding at the bottom */
+        }
+
+        .illusion-container h2 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            margin-bottom: 40px;
+            color: #f1c40f;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Individual Illusion Box Styling */
+        .illusion-box {
+            background-color: rgba(44, 62, 80, 0.8); /* Dark blue-grey with transparency */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .illusion-box h3 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .illusion-box p {
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* 1. Infinite Zoom Tunnel Illusion */
+        .zoom-tunnel {
+            width: 200px;
+            height: 200px;
+            background: repeating-radial-gradient(circle, #ecf0f1 0, #2c3e50 10px);
+            border-radius: 50%;
+            animation: zoomTunnel 3s linear infinite;
+            margin: 40px auto;
+            box-shadow: 0 0 25px rgba(255,255,255,0.3);
+        }
+
+        @keyframes zoomTunnel {
+            from {
+                background-size: 10% 10%;
+            }
+            to {
+                background-size: 200% 200%;
+            }
+        }
+
+        /* 2. Impossible Triangle (Penrose Triangle) */
+        .penrose {
+            width: 100px;
+            height: 100px;
+            background:
+                linear-gradient(135deg, #ecf0f1 25%, transparent 25%) 0 0,
+                linear-gradient(225deg, #ecf0f1 25%, transparent 25%) 0 0,
+                linear-gradient(315deg, #2c3e50 25%, transparent 25%) 0 0,
+                linear-gradient(45deg, #2c3e50 25%, transparent 25%) 0 0;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            transform: rotate(45deg);
+            margin: 40px auto;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+        }
+
+        /* 3. Wavy Grid (Perception Distortion) */
+        .wavy-grid {
+            width: 300px;
+            height: 300px;
+            background-image:
+                repeating-linear-gradient(to right, #fff, #fff 2px, #2c3e50 2px, #2c3e50 10px),
+                repeating-linear-gradient(to bottom, #fff, #fff 2px, #2c3e50 2px, #2c3e50 10px);
+            background-size: 100% 100%;
+            animation: waveGrid 4s linear infinite;
+            margin: 40px auto;
+            border-radius: 8px;
+        }
+
+        @keyframes waveGrid {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 20px 20px;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        /* 4. Morphing Blob (Liquid Illusion) - Enhanced */
+        .morph-blob {
+            width: 180px;
+            height: 180px;
+            background:
+                radial-gradient(circle at 30% 30%, #4CAF50, transparent 70%), /* Subtle highlight */
+                linear-gradient(45deg, #27ae60, #2980b9);
+            border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+            animation: morph 6s ease-in-out infinite;
+            margin: 40px auto;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.1); /* Deeper shadow, subtle inner glow */
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); /* Apply drop shadow for more organic feel */
+        }
+
+        @keyframes morph {
+            0%, 100% {
+                border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+            }
+            50% {
+                border-radius: 60% 40% 30% 70% / 70% 30% 40% 60%;
+            }
+        }
+
+        /* 5. Hypnotic Rings Spinner - Enhanced */
+        .hypno-ring {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background:
+                conic-gradient(from 0deg, #f1c40f, #e67e22, #c0392b, #f1c40f);
+            animation: spinRings 3s linear infinite, hueShift 10s linear infinite; /* Added hue shift */
+            margin: 40px auto;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            filter: saturate(1.2) contrast(1.1); /* Enhanced color vibrancy */
+            position: relative; /* For pseudo-element */
+            overflow: hidden; /* To keep pseudo-element within bounds */
+        }
+
+        /* Inner ring effect with pseudo-element */
+        .hypno-ring::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: innerPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes spinRings {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes hueShift {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @keyframes innerPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+
+        /* 6. Anamorphic Hover Plane */
+        .anamorphic-plane-container {
+            perspective: 500px; /* Define perspective for 3D */
+            width: 300px;
+            height: 150px;
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            position: relative;
+        }
+
+        .anamorphic-plane {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            transform: rotateX(60deg) rotateZ(30deg) skewX(20deg) scale(0.8); /* Distorted state */
+            transform-origin: center bottom; /* Adjust origin for perspective */
+            transition: transform 0.5s ease-out, background 0.5s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+            backface-visibility: hidden; /* Prevent flickering */
+        }
+
+        .anamorphic-plane-container:hover .anamorphic-plane {
+            transform: rotateX(0deg) rotateZ(0deg) skewX(0deg) scale(1); /* Corrected state on hover */
+            background: linear-gradient(45deg, #3498db, #2980b9); /* Change color on hover */
+        }
+
+        /* Optional: Add a subtle ground shadow for better 3D feel */
+        .anamorphic-plane-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            width: 80%;
+            height: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            filter: blur(10px);
+            z-index: -1;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            transform: scaleY(0.5);
+        }
+
+        .anamorphic-plane-container:hover::after {
+            transform: scaleY(1.0);
+            opacity: 0.7;
+        }
+
+
+        /* 7. Pulsating Ripple Effect */
+        .ripple-effect {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            margin: 40px auto;
+            overflow: hidden; /* Hide excess ripples */
+            background-color: #34495e; /* Base background for the ripples */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ripple-effect::before,
+        .ripple-effect::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: ripplePulse 3s infinite ease-out;
+        }
+
+        .ripple-effect::before {
+            width: 0;
+            height: 0;
+            animation-delay: 0s;
+        }
+
+        .ripple-effect::after {
+            width: 0;
+            height: 0;
+            animation-delay: 1.5s; /* Stagger the second ripple */
+            background: rgba(255, 255, 255, 0.05); /* Lighter ripple */
+        }
+
+        @keyframes ripplePulse {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                box-shadow: 0 0 0 0px rgba(255,255,255,0.4);
+            }
+            100% {
+                width: 220px; /* Slightly larger than container to ensure full cover */
+                height: 220px;
+                opacity: 0;
+                box-shadow: 0 0 0 10px rgba(255,255,255,0); /* Fades out shadow */
+            }
+        }
+
+        /* NEW ILLUSIONS */
+
+        /* 8. Yin and Yang Symbol */
+        .yin-yang {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            background: linear-gradient(to right, #fff 50%, #000 50%); /* Base white and black halves */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            margin: 40px auto;
+            animation: rotateYinYang 8s linear infinite; /* Optional: Make it slowly rotate */
+        }
+
+        .yin-yang::before,
+        .yin-yang::after {
+            content: '';
+            position: absolute;
+            width: 100px; /* Half the width of the main circle */
+            height: 100px; /* Half the height of the main circle */
+            border-radius: 50%;
+        }
+
+        .yin-yang::before { /* Black half-circle on top of white */
+            background: #000;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 100px; /* Large semi-circle for the "S" curve */
+            border-bottom-right-radius: 100px;
+        }
+
+        .yin-yang::after { /* White half-circle on top of black */
+            background: #fff;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-left-radius: 100px; /* Large semi-circle for the "S" curve */
+            border-top-right-radius: 100px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* The small dots */
+        .yin-yang .dot-white,
+        .yin-yang .dot-black {
+            position: absolute;
+            width: 40px; /* Size of the dots */
+            height: 40px;
+            border-radius: 50%;
+            z-index: 1; /* Ensure dots are on top */
+        }
+
+        .yin-yang .dot-white {
+            background: #fff;
+            top: 25px; /* Position within the black half */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .yin-yang .dot-black {
+            background: #000;
+            bottom: 25px; /* Position within the white half */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes rotateYinYang {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 9. Floating Orb */
+        .floating-orb {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ecf0f1, #3498db, #8e44ad); /* Gradient for depth */
+            animation: floatOrb 5s ease-in-out infinite alternate;
+            filter: blur(1px) drop-shadow(0 0 30px rgba(142, 68, 173, 0.7)); /* Subtle blur, strong glow */
+            margin: 40px auto;
+            position: relative; /* For the subtle reflection */
+        }
+
+        /* Pseudo-element for a subtle reflection/highlight */
+        .floating-orb::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.4) 0%, transparent 60%);
+            filter: blur(5px);
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        /* 10. Perpetual Motion Loader */
+        .perpetual-motion-loader {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            margin: 40px auto;
+            transform-style: preserve-3d; /* Enable 3D for children */
+            animation: rotatePerpetual 6s linear infinite;
+        }
+
+        .perpetual-motion-loader div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px solid #f1c40f;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            opacity: 0.8;
+            transform-origin: center center;
+        }
+
+        .perpetual-motion-loader div:nth-child(1) {
+            transform: rotateY(0deg) translateZ(0px);
+            border-color: #e67e22;
+        }
+        .perpetual-motion-loader div:nth-child(2) {
+            transform: rotateY(45deg) translateZ(20px);
+            border-color: #c0392b;
+        }
+        .perpetual-motion-loader div:nth-child(3) {
+            transform: rotateY(90deg) translateZ(40px);
+            border-color: #9b59b6;
+        }
+        .perpetual-motion-loader div:nth-child(4) {
+            transform: rotateY(135deg) translateZ(60px);
+            border-color: #34495e;
+        }
+        .perpetual-motion-loader div:nth-child(5) {
+            transform: rotateY(180deg) translateZ(80px);
+            border-color: #2c3e50;
+        }
+        /* More circles can be added for smoother effect */
+
+        @keyframes rotatePerpetual {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            100% { transform: rotateY(360deg) rotateX(360deg); }
+        }
+
+        /* 11. Breathing Sphere */
+        .breathing-sphere {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ecf0f1, #3498db, #2980b9);
+            animation: breatheSphere 4s ease-in-out infinite alternate;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.2);
+            filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.7));
+            margin: 40px auto;
+        }
+
+        @keyframes breatheSphere {
+            0% { transform: scale(0.95); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.9; }
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .illusion-box {
+                padding: 20px;
+            }
+            .illusion-box h3 {
+                font-size: 1.6rem;
+            }
+            .illusion-box p {
+                font-size: 0.9rem;
+            }
+            .zoom-tunnel, .wavy-grid, .morph-blob, .hypno-ring,
+            .anamorphic-plane-container, .ripple-effect,
+            .yin-yang, .floating-orb, .perpetual-motion-loader, .breathing-sphere {
+                width: 180px;
+                height: 180px;
+            }
+            .anamorphic-plane {
+                font-size: 1.6rem;
+            }
+            .anamorphic-plane-container {
+                height: 120px;
+            }
+            .penrose {
+                width: 80px;
+                height: 80px;
+            }
+            .yin-yang::before, .yin-yang::after {
+                width: 90px; /* Adjust for smaller yin-yang */
+                height: 90px;
+            }
+            .yin-yang .dot-white, .yin-yang .dot-black {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-nav h1 {
+                font-size: 1.2rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+            }
+            .illusion-container h2 {
+                font-size: 1.6rem;
+                margin-bottom: 30px;
+            }
+            .illusion-box {
+                padding: 15px;
+            }
+            .illusion-box h3 {
+                font-size: 1.4rem;
+            }
+            .illusion-box p {
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+            }
+            .zoom-tunnel, .wavy-grid, .morph-blob, .hypno-ring,
+            .anamorphic-plane-container, .ripple-effect,
+            .yin-yang, .floating-orb, .perpetual-motion-loader, .breathing-sphere {
+                width: 150px;
+                height: 150px;
+            }
+            .anamorphic-plane {
+                font-size: 1.4rem;
+            }
+            .anamorphic-plane-container {
+                height: 100px;
+            }
+            .penrose {
+                width: 70px;
+                height: 70px;
+            }
+            .yin-yang::before, .yin-yang::after {
+                width: 75px; /* Adjust for smaller yin-yang */
+                height: 75px;
+            }
+            .yin-yang .dot-white, .yin-yang .dot-black {
+                width: 30px;
+                height: 30px;
+            }
+            .yin-yang .dot-white {
+                top: 20px;
+            }
+            .yin-yang .dot-black {
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>CSS Optical Illusions</h1>
+        <a href="index.html">←Exit</a>
+    </header>
+
+    <div class="illusion-container">
+        <h2>Mind-Bending CSS Effects</h2>
+
+        <div class="illusion-box">
+            <h3>Infinite Zoom Tunnel Illusion</h3>
+            <p>Experience an endless journey into the depths with this <strong>infinite zoom tunnel illusion</strong>, created using CSS radial gradients and animation to simulate continuous forward motion.</p>
+            <div class="zoom-tunnel"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Impossible Triangle (Penrose Triangle)</h3>
+            <p>Gaze upon the <strong>Impossible Triangle</strong>, a classic optical illusion. Its seemingly three-dimensional form defies logic, created purely with clever CSS gradients and rotations.</p>
+            <div class="penrose"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Wavy Grid Illusion</h3>
+            <p>Watch as static lines appear to <strong>warp and undulate</strong> in this wavy grid illusion. The subtle animation of the background position tricks your perception into seeing movement.</p>
+            <div class="wavy-grid"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Morphing Blob (Liquid Illusion)</h3>
+            <p>Observe the <strong>Morphing Blob</strong>, an organic shape that continuously transforms, mimicking the fluid motion of liquid. Enhanced with subtle highlights and deeper shadows for a more tangible feel.</p>
+            <div class="morph-blob"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Hypnotic Rings Spinner</h3>
+            <p>Allow your eyes to follow the mesmerizing rotation of the <strong>Hypnotic Rings Spinner</strong>. Enhanced with a subtle inner pulse and continuous hue shifting for a more intense hypnotic effect.</p>
+            <div class="hypno-ring"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Anamorphic Hover Plane</h3>
+            <p>This <strong>anamorphic plane</strong> appears distorted until you hover over it, at which point it snaps into a clear, readable form. Achieved through advanced 3D CSS transforms and perspective.</p>
+            <div class="anamorphic-plane-container">
+                <div class="anamorphic-plane">VIEW ME</div>
+            </div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Pulsating Ripple Effect</h3>
+            <p>Witness a calming yet dynamic <strong>pulsating ripple effect</strong>, simulating waves emanating from a central point. Created using layered pseudo-elements and staggered animations for continuous, organic motion.</p>
+            <div class="ripple-effect"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Yin and Yang Symbol</h3>
+            <p>Experience the balance of opposing forces with the classic <strong>Yin and Yang symbol</strong>, crafted entirely using CSS `border-radius` and precise positioning of pseudo-elements. It subtly rotates for a living feel.</p>
+            <div class="yin-yang">
+                <div class="dot-white"></div>
+                <div class="dot-black"></div>
+            </div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Floating Orb</h3>
+            <p>Observe the serene <strong>Floating Orb</strong>, which appears to gently levitate and glow. This effect is achieved through a combination of radial gradients, `filter: blur()`, `drop-shadow()`, and subtle vertical animation.</p>
+            <div class="floating-orb"></div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Perpetual Motion Loader</h3>
+            <p>This <strong>perpetual motion loader</strong> creates the illusion of continuously rotating and interacting rings in 3D space. It's built with multiple layered elements using `transform-style: preserve-3d` and staggered rotations.</p>
+            <div class="perpetual-motion-loader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="illusion-box">
+            <h3>Breathing Sphere</h3>
+            <p>Watch the <strong>Breathing Sphere</strong> gently expand and contract, mimicking the rhythm of breath. This subtle, organic motion is created using `transform: scale()` and `opacity` animation on a visually rich radial gradient background.</p>
+            <div class="breathing-sphere"></div>
+        </div>
+
+    </div>
+        <footer>
+        <p><span style="color:black;font-weight:bold;">© 2025 Elite CSS Portfolio.<br> Crafted with precision and creativity.</span></p>
+    </footer>
+</body>
+</html>

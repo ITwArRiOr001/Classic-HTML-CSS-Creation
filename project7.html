@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 7: Cyber-Battleframe Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for a Unified & Professional Palette */
+        :root {
+            --bg-deep-cyber: linear-gradient(to bottom, #0a0a1a, #03030c); /* Even deeper, almost black */
+            --primary-glow-green: #00ff00; /* Classic vibrant green */
+            --secondary-glow-magenta: #ff00ff; /* Bright magenta for contrast/alerts */
+            --accent-gold: #ffeb3b; /* Brighter, dynamic gold */
+            --red-primary: #ff0000; /* Standard red for damage/errors */
+            --panel-bg-alpha: rgba(15, 15, 25, 0.95); /* Nearly opaque dark panel */
+            --panel-border-dark: #004d00; /* Darker, deep green border */
+            --ui-panel-text: #00e600; /* Slightly desaturated green for panel text */
+            --ui-panel-header-color: var(--accent-gold); /* Gold for panel headers */
+            --ui-panel-header-shadow: rgba(255, 235, 59, 0.6);
+            --main-screen-border: var(--secondary-glow-magenta);
+            --main-screen-shadow: rgba(255, 0, 255, 0.4);
+            --player-color: #00ff00; /* Player specific green */
+            --enemy-color: #ff0000; /* Enemy specific red */
+            --health-fill-player: #00c853; /* Darker green for HP fill */
+            --health-fill-enemy: #d50000; /* Darker red for HP fill */
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'VT323', monospace; /* Keep VT323 as primary retro font */
+            margin: 0;
+            padding: 0;
+            background: var(--bg-deep-cyber);
+            color: var(--primary-glow-green);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            text-shadow: 0 0 7px rgba(0, 255, 0, 0.6), 0 0 10px rgba(0, 255, 0, 0.3); /* Stronger glow */
+            position: relative;
+            /* Subtle matrix rain effect on background */
+            background-image: linear-gradient(transparent 50%, rgba(0, 255, 0, 0.05) 50%);
+            background-size: 100% 20px;
+            animation: matrixRain 60s linear infinite;
+        }
+
+        @keyframes matrixRain {
+            from { background-position: 0 0; }
+            to { background-position: 0 2000px; } /* Long scroll for continuous effect */
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: rgba(0, 0, 0, 0.7); /* More opaque */
+            padding: 18px 35px; /* Larger padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 20px rgba(0, 255, 0, 0.3); /* Stronger glow shadow */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary-glow-green); /* Thicker border */
+            text-shadow: 0 0 8px var(--primary-glow-green); /* Header text glow */
+        }
+
+        .back-nav a {
+            color: var(--primary-glow-green);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem; /* Larger */
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+            transition: color 0.3s ease, transform 0.2s ease;
+            letter-spacing: 0.05em; /* Spaced out */
+        }
+
+        .back-nav a:hover {
+            color: var(--secondary-glow-magenta);
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
+            transform: scale(1.08); /* More pronounced hover */
+        }
+
+        .back-nav h1 {
+            color: var(--primary-glow-green);
+            font-size: 1.6rem; /* Larger */
+            margin: 0;
+            text-shadow: 0 0 10px var(--primary-glow-green); /* Stronger glow */
+            letter-spacing: 0.1em; /* More spaced out */
+        }
+
+        /* Game UI Container */
+        .game-ui-container {
+            margin-top: 130px; /* More space for header */
+            background-color: rgba(0, 0, 0, 0.9); /* Pure black translucent background */
+            border: 4px solid var(--primary-glow-green); /* Thicker, more dominant border */
+            border-radius: 15px; /* More rounded */
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.8), inset 0 0 20px rgba(0, 255, 0, 0.4); /* Intense outer glow, internal illumination */
+            padding: 30px; /* More internal padding */
+            display: grid;
+            grid-template-columns: 1.2fr 2fr 1.2fr; /* Left/Right panels slightly wider */
+            grid-template-rows: auto;
+            gap: 25px; /* Increased gap */
+            max-width: 1300px; /* Wider interface */
+            width: 95%;
+            margin-bottom: 70px;
+            min-height: 700px; /* Taller min-height */
+            position: relative;
+            overflow: hidden; /* For internal visual effects */
+        }
+
+        /* Scanline Overlay for the entire UI */
+        .game-ui-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.1) 50%, transparent 50%),
+                        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 50%, transparent 50%);
+            background-size: 100% 4px, 4px 100%; /* Denser scan lines */
+            z-index: 1; /* Above content, below panels */
+            pointer-events: none;
+            opacity: 0.8;
+            animation: scanlineFlicker 0.2s steps(1) infinite; /* Subtle flicker */
+        }
+
+        @keyframes scanlineFlicker {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 2px; }
+        }
+
+        /* UI Panel Base Style */
+        .ui-panel {
+            background-color: var(--panel-bg-alpha);
+            border: 2px solid var(--panel-border-dark); /* Thicker, darker green border */
+            border-radius: 10px; /* More rounded */
+            padding: 20px; /* More internal padding */
+            box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2); /* Enhanced inner and outer glow */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden; /* For inner glitch effects */
+        }
+
+        /* Panel Header Style */
+        .ui-panel h2 {
+            font-family: 'Press Start 2P', cursive; /* Keep blocky title font */
+            font-size: 1.3rem; /* Slightly larger */
+            color: var(--ui-panel-header-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px; /* More space */
+            text-shadow: 0 0 10px var(--ui-panel-header-shadow);
+            border-bottom: 2px dashed rgba(0, 255, 0, 0.4); /* Stronger dashed border */
+            padding-bottom: 12px;
+            letter-spacing: 0.05em;
+            word-break: break-word; /* Allow long words to break */
+            line-height: 1.1; /* Tighter line height for headers */
+        }
+
+        /* Player Stats Panel (Left) */
+        .player-stats {
+            grid-column: 1 / span 1;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px; /* More spacing */
+            font-size: 1.05rem; /* Adjusted slightly to help fitting */
+            color: var(--ui-panel-text); /* Consistent green text */
+            border-bottom: 1px dotted rgba(0, 255, 0, 0.2); /* Softer dotted line */
+            padding-bottom: 8px;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+            white-space: nowrap; /* Prevent stats from wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis if text is too long */
+        }
+
+        .stat-item:hover {
+            color: var(--primary-glow-green); /* Brighter green on hover */
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.8); /* Strong glow on hover */
+        }
+
+        .stat-item span:first-child {
+            color: var(--ui-panel-text);
+            /* Optional: if stat names are too long, can reduce font-size here */
+            /* font-size: 0.95em; */
+        }
+        .stat-item span:last-child {
+            color: var(--accent-gold); /* Gold for values */
+            text-shadow: 0 0 5px rgba(255, 235, 59, 0.4); /* Gold value glow */
+        }
+
+        /* Inventory Panel (Right) */
+        .inventory {
+            grid-column: 3 / span 1;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px; /* Increased gap */
+            flex-grow: 1;
+            align-content: start;
+        }
+
+        .inventory-slot {
+            width: 70px; /* Larger slots */
+            height: 70px;
+            background-color: rgba(0, 255, 0, 0.08); /* More subtle green tint */
+            border: 1px solid var(--primary-glow-green);
+            display: flex;
+            flex-direction: column; /* For text and potential icon */
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem; /* Slightly smaller font for item names */
+            color: var(--primary-glow-green);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.1); /* Subtle default slot glow */
+            position: relative;
+            overflow: hidden;
+            text-align: center; /* Center text within slot */
+            line-height: 1.2; /* Tighter line height for small text */
+            word-break: break-word; /* Allow item names to break */
+            padding: 2px; /* Small padding to prevent text hitting edges */
+        }
+
+        .inventory-slot:hover {
+            background-color: rgba(0, 255, 0, 0.3);
+            transform: scale(1.1); /* More pronounced scale */
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8), inset 0 0 10px rgba(0, 255, 0, 0.4); /* Stronger glow, inner light */
+            z-index: 5; /* Bring to front on hover */
+        }
+
+        /* Optional: Add a subtle animated grid to empty slots */
+        .inventory-slot:empty {
+            background-image:
+                linear-gradient(to right, rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 15px 15px;
+            animation: slotGridPulse 5s linear infinite alternate;
+        }
+
+        @keyframes slotGridPulse {
+            0% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Main Battle Screen (Center) */
+        .battle-screen {
+            grid-column: 2 / span 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.8); /* Even darker for main screen */
+            border: 3px solid var(--main-screen-border); /* Magenta border */
+            box-shadow: 0 0 30px var(--main-screen-shadow), inset 0 0 25px var(--main-screen-shadow); /* Stronger magenta glow */
+            border-radius: 12px; /* Consistent rounding */
+            overflow: hidden;
+        }
+
+        /* Simulated Scanlines/Noise for Battle Screen */
+        .battle-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(transparent 50%, rgba(0, 0, 0, 0.3) 50%),
+                linear-gradient(90deg, transparent 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px, 4px 100%;
+            animation: screenGlitches 0.5s steps(1) infinite;
+            pointer-events: none;
+            mix-blend-mode: overlay; /* Blends nicely with content */
+            opacity: 0.6;
+            z-index: 2; /* Above characters */
+        }
+
+        @keyframes screenGlitches {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
+        }
+
+        .battle-area {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 30px; /* More padding */
+            font-size: 1.6rem; /* Larger character text */
+            color: var(--accent-gold);
+            position: relative;
+            z-index: 3; /* Ensure characters are above screen effects */
+            flex-wrap: wrap; /* Allow characters to wrap if space is too tight */
+            gap: 15px; /* Gap between characters if they wrap */
+        }
+
+        .player-character, .enemy-character {
+            width: 140px; /* Larger characters */
+            height: 140px;
+            background-color: rgba(0, 255, 0, 0.2);
+            border: 3px solid var(--primary-glow-green);
+            display: flex;
+            flex-direction: column; /* For text and health bar */
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-align: center;
+            position: relative;
+            font-family: 'Press Start 2P', cursive;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0; /* Prevent them from shrinking too much */
+        }
+        .player-character:hover, .enemy-character:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-glow-green), inset 0 0 10px var(--primary-glow-green);
+        }
+
+        .enemy-character {
+            background-color: rgba(255, 0, 0, 0.2);
+            border-color: var(--enemy-color);
+        }
+        .enemy-character:hover {
+             box-shadow: 0 0 20px var(--enemy-color), inset 0 0 10px var(--enemy-color);
+        }
+
+
+        .health-bar {
+            width: 90%; /* Wider health bars */
+            height: 18px; /* Taller health bars */
+            background-color: rgba(50, 50, 50, 0.8); /* Darker background */
+            border: 1px solid var(--primary-glow-green);
+            margin-top: 15px; /* More space */
+            position: relative;
+            border-radius: 4px; /* More rounded */
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); /* Green glow for player HP */
+        }
+        .health-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 80%; /* Simulate health */
+            background-color: var(--health-fill-player);
+            transition: width 0.5s ease; /* Smooth health change */
+        }
+
+        .enemy-health-bar {
+            border-color: var(--enemy-color);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); /* Red glow for enemy HP */
+        }
+        .enemy-health-bar::before {
+            width: 60%; /* Simulate enemy health */
+            background-color: var(--health-fill-enemy);
+        }
+
+        .battle-log {
+            height: 120px; /* Taller log */
+            background-color: rgba(0, 0, 0, 0.6); /* Deeper black */
+            border-top: 2px solid var(--panel-border-dark); /* Stronger border */
+            padding: 15px; /* More padding */
+            overflow-y: auto;
+            font-size: 0.95rem; /* Adjusted slightly to help fitting */
+            color: var(--primary-glow-green);
+            border-radius: 0 0 12px 12px; /* Matches container */
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2); /* Inner glow */
+            line-height: 1.3; /* Tighter line height for log messages */
+        }
+        /* Scrollbar styling (for Webkit browsers) */
+        .battle-log::-webkit-scrollbar {
+            width: 6px;
+        }
+        .battle-log::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .battle-log::-webkit-scrollbar-thumb {
+            background: var(--primary-glow-green);
+            border-radius: 10px;
+            box-shadow: 0 0 5px var(--primary-glow-green);
+        }
+        .battle-log::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
+
+
+        .battle-log p {
+            margin: 5px 0; /* More spacing */
+            white-space: normal; /* Allow log messages to wrap */
+            word-break: break-word; /* Crucial: break long words to fit */
+        }
+
+        .battle-log p.system-msg {
+            color: var(--accent-gold); /* Gold for system messages */
+            text-shadow: 0 0 5px rgba(255, 235, 59, 0.5);
+        }
+        .battle-log p.player-action {
+            color: var(--primary-glow-green);
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        .battle-log p.enemy-action {
+            color: var(--secondary-glow-magenta);
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+        }
+        .battle-log p.damage-msg {
+            color: var(--red-primary);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--red-primary);
+        }
+        .battle-log p.turn-msg {
+            color: #888; /* Muted for turn info */
+            text-align: center;
+            border-top: 1px dotted rgba(0, 255, 0, 0.1);
+            padding-top: 5px;
+            margin-top: 10px;
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .game-ui-container {
+                grid-template-columns: 1fr;
+                min-height: unset;
+                padding: 20px;
+                margin-top: 110px;
+                gap: 20px;
+            }
+            .ui-panel {
+                /* General font size adjustment for all panels */
+                font-size: 1rem; /* Base font size for VT323 */
+            }
+            .ui-panel h2 {
+                font-size: 1.2rem; /* Adjusted for Press Start 2P */
+            }
+            .player-stats, .inventory, .battle-screen {
+                grid-column: 1 / span 1;
+            }
+            .stat-item {
+                font-size: 1rem; /* Ensure it stays readable */
+            }
+            .inventory-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .inventory-slot {
+                width: 60px;
+                height: 60px;
+                font-size: 0.8rem;
+            }
+            .player-character, .enemy-character {
+                width: 130px; /* Slightly smaller characters */
+                height: 130px;
+                font-size: 1.5rem;
+            }
+            .battle-log {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-ui-container {
+                gap: 15px;
+                padding: 15px;
+            }
+            .ui-panel {
+                padding: 15px;
+            }
+            .ui-panel h2 {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+            .stat-item {
+                font-size: 0.95rem; /* Further adjustment */
+            }
+            .player-character, .enemy-character {
+                width: 110px; /* Smaller characters */
+                height: 110px;
+                font-size: 1.3rem;
+            }
+            .health-bar {
+                height: 14px;
+            }
+            .inventory-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+            .inventory-slot {
+                width: 50px;
+                height: 50px;
+                font-size: 0.75rem;
+            }
+            .battle-log {
+                height: 100px;
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-nav h1 {
+                font-size: 1.3rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+            }
+            .game-ui-container {
+                padding: 10px;
+                margin-top: 90px;
+                gap: 10px;
+            }
+            .ui-panel {
+                padding: 10px;
+            }
+            .ui-panel h2 {
+                font-size: 1rem;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+            }
+            .stat-item {
+                font-size: 0.85rem;
+                margin-bottom: 5px;
+                padding-bottom: 3px;
+                white-space: normal; /* Allow wrapping on very small screens for stats */
+                text-overflow: clip; /* No ellipsis if wrapped */
+            }
+            .inventory-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 5px;
+            }
+            .inventory-slot {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7rem;
+                padding: 1px;
+            }
+            .player-character, .enemy-character {
+                width: 90px; /* Even smaller characters */
+                height: 90px;
+                font-size: 1.1rem;
+            }
+            .health-bar {
+                height: 10px;
+                margin-top: 10px;
+            }
+            .battle-log {
+                height: 80px;
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+            .battle-log p {
+                margin: 3px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Cyber-Battleframe Interface</h1>
+        <a href="index.html">Exit</a>
+    </header>
+
+    <div class="game-ui-container">
+        <div class="ui-panel player-stats">
+            <h2>PLAYER_01 [STATUS]</h2>
+            <div class="stat-item"><span>UNIT_ID:</span> <span>0xCSS_HERO</span></div>
+            <div class="stat-item"><span>HP:</span> <span>[████████░░] 80%</span></div>
+            <div class="stat-item"><span>MANA:</span> <span>[██████████] 100%</span></div>
+            <div class="stat-item"><span>LEVEL:</span> <span>25 (CYBERNETIC)</span></div>
+            <div class="stat-item"><span>XP:</span> <span>12345 / 15000</span></div>
+            <div class="stat-item"><span>ATK_PWR:</span> <span>180</span></div>
+            <div class="stat-item"><span>DEF_SHLD:</span> <span>120</span></div>
+            <div class="stat-item"><span>CREDITS:</span> <span>9999</span></div>
+        </div>
+
+        <div class="ui-panel battle-screen">
+            <div class="battle-area">
+                <div class="player-area">
+                    <div class="player-character">HERO</div>
+                    <div class="health-bar"></div>
+                </div>
+                <div class="enemy-area">
+                    <div class="enemy-character">ENEMY</div>
+                    <div class="health-bar enemy-health-bar"></div>
+                </div>
+            </div>
+            <div class="battle-log">
+                <p class="system-msg">[SYSTEM_LOG] Encountered: <span style="color:var(--secondary-glow-magenta);">ROGUE AI UNIT</span>!</p>
+                <p class="player-action">[COMMAND] HERO_UNIT: 'OMEGA_STRIKE'.</p>
+                <p class="damage-msg">[ENEMY] SUSTAINED 25 DAMAGE.</p>
+                <p class="enemy-action">[ROGUE AI] INITIATED 'VIRUS_INJECT'.</p>
+                <p class="damage-msg">[HERO] SUSTAINED 8 DAMAGE.</p>
+                <p class="system-msg">[SYSTEM_LOG] Phase: COMBAT TURN_02.</p>
+                <p class="player-action">[COMMAND] HERO_UNIT: 'SHIELD_PROTOCOL'.</p>
+                <p class="system-msg">[SYSTEM_LOG] SHIELD_PROTOCOL: <span style="color:var(--primary-glow-green);">ACTIVE</span>.</p>
+            </div>
+        </div>
+
+        <div class="ui-panel inventory">
+            <h2>INVENTORY [CORE]</h2>
+            <div class="inventory-grid">
+                <div class="inventory-slot">CYBER-SWORD</div>
+                <div class="inventory-slot">PLASMA_SHIELD</div>
+                <div class="inventory-slot">REGEN_PACK</div>
+                <div class="inventory-slot">PHASE_AXE</div>
+                <div class="inventory-slot">TITAN_ARMOR</div>
+                <div class="inventory-slot">QUANTUM_RING</div>
+                <div class="inventory-slot">ENERGY_ORB</div>
+                <div class="inventory-slot">ACCESS_KEY</div>
+                <div class="inventory-slot"></div>
+                <div class="inventory-slot"></div>
+                <div class="inventory-slot"></div>
+                <div class="inventory-slot"></div>
+            </div>
+        </div>
+    </div>
+        <footer>
+        <p><span style="color:black;font-weight:bold;">© 2025 Elite CSS Portfolio.<br> Crafted with precision and creativity.</span></p>
+    </footer>
+</body>
+</html>

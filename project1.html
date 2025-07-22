@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: Meet Your Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- New Professional Color Palette & Design Variables --- */
+        :root {
+            --primary-bg-light: linear-gradient(135deg, #e0f2f7 0%, #d8e6f1 100%); /* Soft sky blue to slate blue */
+            --secondary-bg-light: #ffffff; /* Clean white for main container */
+            --accent-main: #3498db; /* Deep Sky Blue */
+            --accent-highlight: #2ecc71; /* Emerald Green */
+            --text-dark: #34495e; /* Dark Slate Gray */
+            --text-light: #7f8c8d; /* Muted Gray */
+            --border-light: #bdc3c7; /* Light Gray for borders */
+            --shadow-light: rgba(52, 73, 94, 0.1); /* Subtle dark shadow */
+            --hover-shadow-light: rgba(52, 73, 94, 0.25); /* More prominent hover shadow */
+            --card-bg: #f9fcfc; /* Very light blue for cards */
+            --header-gradient: linear-gradient(90deg, #3498db 0%, #2ecc71 100%); /* Blue to green header */
+            --profile-bg: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); /* Light pastel gradient for sidebar */
+            --profile-border: #90caf9; /* Soft blue border for profile pic */
+            --profile-hi-color: #2c3e50; /* Darker tone for "HI" */
+            --profile-hi-hover: #f39c12; /* Warm amber on hover */
+            --skill-border: #aed6f1; /* Soft blue for skill borders */
+            --skill-hover-bg: linear-gradient(110deg, #3498db 40%, #2ecc71 88%); /* Skill hover gradient */
+            --skill-text-light: #2c3e50; /* Skill card text */
+            --project-border: #aed6f1; /* Soft blue for project border */
+            --project-hover-border: #f39c12; /* Amber for project hover */
+            --footer-text-color: #5d6d7e; /* Dark muted gray for footer */
+        }
+
+        body {
+            background: var(--primary-bg-light);
+            min-height: 100vh;
+            font-family: 'Lato', sans-serif; /* Keep Lato for body for readability */
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            opacity: 0; /* For fade-in animation */
+            animation: fadeInBody 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInBody {
+            to { opacity: 1; }
+        }
+
+        /* --- Header Navigation --- */
+        .back-nav {
+            background: var(--header-gradient);
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 32px 32px;
+            animation: slideInFromTop 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInFromTop {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .back-nav h1 {
+            color: #fff;
+            font-family: 'Merriweather', serif; /* Use Merriweather for header title */
+            letter-spacing: 0.04em;
+            font-size: 1.3rem;
+            font-weight: 700; /* Adjusted for Merriweather */
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .back-nav a {
+            color: #fff;
+            font-weight: 600; /* Adjusted for Montserrat */
+            text-decoration: none;
+            padding: 9px 18px; /* Slightly more padding */
+            font-size: 0.95rem; /* Slightly smaller for professionalism */
+            border-radius: 25px; /* Pill-shaped button */
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: background 0.25s, color 0.25s, transform 0.25s;
+        }
+        .back-nav a:hover {
+            background: rgba(255,255,255,0.95);
+            color: var(--accent-main);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- Resume Container --- */
+        .resume-container {
+            max-width: 960px; /* Slightly wider */
+            margin: 48px auto;
+            background: var(--secondary-bg-light);
+            border-radius: 20px; /* Slightly softer corners */
+            box-shadow: 0 15px 45px -5px var(--shadow-light);
+            padding: 40px 45px; /* Slightly more padding */
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 48px; /* Increased gap */
+            border: 1px solid var(--border-light);
+            animation: dropIn 1s cubic-bezier(.24,.91,.46,1.13) 0.3s forwards; /* Delayed animation */
+            opacity: 0; /* Start hidden for animation */
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            background: var(--profile-bg);
+            color: var(--text-dark);
+            border-radius: 15px; /* Slightly softer corners */
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            padding: 30px 20px;
+            border: 1px solid rgba(var(--accent-main-rgb), 0.2); /* Soft blue border */
+            position: relative;
+            z-index: 1;
+        }
+        .sidebar h2 {
+            font-family: 'Merriweather', serif; /* Use Merriweather for sidebar H2 */
+            color: var(--accent-main);
+            margin: 0 0 20px 0;
+            font-size: 1.3rem; /* Slightly adjusted */
+            letter-spacing: .02em;
+            background: linear-gradient(92deg, var(--accent-main) 54%, var(--accent-highlight) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* --- Profile Picture --- */
+        .profile-picture {
+            width: 120px; height: 120px; /* Slightly larger */
+            border-radius: 50%;
+            margin: 0 auto 25px; /* Adjusted margin */
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid var(--profile-border); /* Refined border */
+            box-shadow: 0 0 20px rgba(var(--accent-highlight-rgb), 0.2), 0 0 8px rgba(var(--accent-main-rgb), 0.1);
+            position:relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 30% 35%, rgba(var(--accent-highlight-rgb), 0.2) 0 34%, transparent 38%),
+                        radial-gradient(circle at 75% 75%, rgba(var(--accent-main-rgb), 0.2) 0 28%, transparent 48%),
+                        linear-gradient(125deg, #81c784 0%, #64b5f6 100%); /* Softer, professional gradient */
+            transition: all 0.3s ease-in-out;
+        }
+        .profile-picture::before, .profile-picture::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .profile-picture::before {
+            width: 90px; height: 90px;
+            border: 1.5px dashed rgba(255,255,255,0.4); /* Subtler dashed line */
+            left: 10px; top: 8px;
+            opacity: 0.6;
+            transform: rotate(-30deg);
+            filter: blur(0.8px);
+            z-index: 1;
+        }
+        .profile-picture::after {
+            width: 60px; height: 60px;
+            border: 1px dotted rgba(255,255,255,0.5); /* Subtler dotted line */
+            left: 30px; top: 28px;
+            opacity: 0.5;
+            transform: rotate(20deg);
+            filter: blur(0.4px);
+        }
+        .profile-hi {
+            font-family: 'Merriweather', serif; /* Use Merriweather for "HI" text */
+            font-size: 2.3rem; /* Slightly larger */
+            font-weight: 700;
+            letter-spacing: .08em; /* Slightly tighter letter-spacing */
+            color: var(--profile-hi-color);
+            z-index: 2;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+            transition: color 0.4s cubic-bezier(.5,.8,.29,1.11), text-shadow 0.3s;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            will-change: color, text-shadow;
+        }
+        .profile-picture:hover .profile-hi,
+        .profile-picture:focus .profile-hi {
+            color: var(--profile-hi-hover);
+            text-shadow:
+                0 0 10px rgba(var(--profile-hi-hover-rgb), 0.6),
+                0 0 20px rgba(var(--profile-hi-hover-rgb), 0.4);
+        }
+        /* END custom circle */
+
+        .sidebar p {
+            font-size: 0.98rem; /* Slightly smaller for professionalism */
+            color: var(--text-light);
+            margin-bottom: 25px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .contact-info {
+            margin-top: 30px;
+            padding: 15px 10px 5px 10px;
+            border-radius: 12px;
+            background: rgba(236, 240, 241, 0.6); /* Lighter, subtle background */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(var(--accent-main-rgb), 0.1);
+        }
+        .contact-info h2 {
+            font-family: 'Montserrat', sans-serif; /* Use Montserrat for contact H2 */
+            color: var(--accent-main);
+            font-size: 0.95em;
+            border:none; padding:0; margin:0 0 10px 0;
+            background:none;
+            text-shadow: none; /* Removed text shadow for clean look */
+            font-weight: 600;
+        }
+        .contact-info p {
+            margin: 6px 0; /* Adjusted margin */
+            font-size: 0.92rem; /* Slightly smaller */
+            color: var(--text-dark);
+            text-shadow: none; /* Removed text shadow for clean look */
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            padding-right: 0; /* Removed padding right */
+            position: relative;
+        }
+        .main-content section {
+            margin-bottom: 40px; /* Increased margin-bottom */
+            animation: fadeInSection 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        .main-content section:nth-of-type(1) { animation-delay: 0.6s; }
+        .main-content section:nth-of-type(2) { animation-delay: 0.8s; }
+        .main-content section:nth-of-type(3) { animation-delay: 1s; }
+
+        @keyframes fadeInSection {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content h2 {
+            font-family: 'Merriweather', serif; /* Use Merriweather for main H2s */
+            color: var(--accent-main);
+            border-bottom: 2px solid var(--accent-highlight); /* Highlight color for underline */
+            padding-bottom: 10px; /* Slightly more padding */
+            margin-bottom: 20px; /* Adjusted margin */
+            font-size: 1.8rem; /* Adjusted size */
+            letter-spacing: .01em;
+            background: linear-gradient(92deg, var(--accent-main) 65%, var(--accent-highlight) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.05); /* Softer shadow */
+        }
+
+        /* --- SKILLS: animated highlight --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Adjusted minmax */
+            gap: 18px; /* Slightly more gap */
+            margin-top: 25px; /* Adjusted margin */
+        }
+        .skill-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--skill-border); /* Softer border */
+            border-radius: 10px; /* Softer radius */
+            padding: 18px 0; /* More padding */
+            text-align: center;
+            font-weight: 600; /* Adjusted for Montserrat/Lato */
+            font-size: 0.95em; /* Slightly smaller */
+            color: var(--skill-text-light);
+            position: relative;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07); /* Softer shadow */
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform .3s, box-shadow .3s, background .25s;
+        }
+        .skill-card:before {
+            content: "";
+            position: absolute; inset:0;
+            background: var(--skill-hover-bg);
+            opacity: 0;
+            transition: opacity .35s;
+            z-index:0;
+        }
+        .skill-card:hover:before, .skill-card:focus-visible:before {
+            opacity: 0.75; /* Stronger shimmer effect */
+            animation: shimmer 1.2s infinite alternate; /* Slightly slower shimmer */
+        }
+        @keyframes shimmer {
+            0% { opacity: 0.6; }
+            100% { opacity: 0.85; }
+        }
+        .skill-card span {
+            position: relative;
+            z-index: 1;
+            color: var(--skill-text-light);
+            transition: color .2s;
+            text-shadow: none; /* Removed initial text shadow */
+        }
+        .skill-card:hover span, .skill-card:focus-visible span {
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Subtle white shadow on hover */
+        }
+        .skill-card:hover, .skill-card:focus-visible {
+            transform: translateY(-5px) scale(1.05); /* More pronounced lift */
+            box-shadow: 0 10px 30px var(--hover-shadow-light); /* Stronger shadow */
+            outline: none; /* Remove default outline */
+        }
+
+        /* --- PROJECT CARDS: professional look --- */
+        .project-item {
+            background: var(--card-bg);
+            border-left: 5px solid var(--project-border); /* Thinner, softer border */
+            padding: 18px 25px 15px 25px; /* Adjusted padding */
+            margin-bottom: 20px; /* Adjusted margin */
+            border-radius: 8px; /* Softer radius */
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            transition: transform .2s, box-shadow .2s, border-left-color 0.25s;
+            position: relative;
+        }
+        .project-item:after {
+            content:'';
+            position:absolute;
+            left:0;right:0;top:0;bottom:0;
+            border-radius:8px; /* Match parent border-radius */
+            background:linear-gradient(100deg,transparent 88%,rgba(var(--accent-highlight-rgb),0.1) 98%); /* Subtler highlight */
+            opacity:0;
+            transition:opacity .25s;
+            z-index:-1;
+        }
+        .project-item:hover, .project-item:focus-within {
+            transform: translateY(-4px) scale(1.02); /* More subtle lift */
+            box-shadow: 0 8px 25px var(--hover-shadow-light); /* Stronger shadow */
+            border-left-color: var(--project-hover-border); /* Highlight on hover */
+            outline: none; /* Remove default outline */
+        }
+        .project-item:hover:after, .project-item:focus-within:after {
+            opacity:0.65; /* Stronger highlight */
+        }
+        .project-item h3 {
+            margin-top: 0.1em;
+            color: var(--accent-main); /* Match accent color */
+            font-size: 1.1rem; /* Slightly smaller */
+            font-weight: 700;
+            letter-spacing:.01em;
+            font-family: 'Montserrat', sans-serif; /* Use Montserrat for project titles */
+        }
+        .project-item p {
+            font-size: 0.95rem; /* Slightly smaller */
+            color: var(--text-dark);
+            margin-bottom: 5px; /* Adjusted margin */
+            line-height: 1.5;
+        }
+
+        /* Contact Section */
+        .contact-section p {
+            font-size: 1rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        /* --- Footer (Added based on previous code) --- */
+        footer {
+            margin-top: 54px;
+            padding: 25px 18px; /* Reduced padding */
+            text-align: center;
+            font-size: 0.95rem; /* Slightly smaller */
+            width: 100%;
+            max-width: 960px; /* Match resume container width */
+            border-radius: 20px 20px 0 0; /* Match resume container top radius, flat bottom */
+            box-shadow: 0 -8px 30px var(--shadow-light); /* Shadow from top */
+            background: rgba(var(--secondary-bg-light-rgb), 0.9); /* Subtle transparent white */
+            backdrop-filter: blur(8px); /* Softer blur */
+            color: var(--footer-text-color);
+            border-top: 1px solid var(--border-light);
+            animation: fadeInBody 0.8s ease-out forwards 1.2s; /* Delayed fade-in */
+            opacity: 0;
+            position: relative;
+            z-index: 100;
+        }
+        footer p {
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            line-height: 1.4;
+        }
+        footer p span {
+            color: var(--accent-main); /* Use main accent color */
+            font-weight: bold;
+        }
+        .footer-links {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+        }
+        .footer-links a {
+            color: var(--text-light); /* Muted gray for icons */
+            font-size: 1.3em; /* Slightly larger icons */
+            text-decoration: none;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .footer-links a:hover {
+            color: var(--accent-highlight);
+            transform: translateY(-2px);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1020px) {
+            .resume-container {padding: 30px 30px; margin: 30px auto;}
+        }
+        @media (max-width: 740px) {
+            .resume-container {
+                grid-template-columns: 1fr;
+                padding: 25px 25px;
+                gap: 30px;
+                margin: 25px auto;
+            }
+            .sidebar { padding: 25px 15px; }
+            .main-content section { margin-bottom: 30px; }
+            footer { border-radius: 15px 15px 0 0; }
+        }
+        @media (max-width: 520px) {
+            .back-nav { padding: 10px 15px; }
+            .back-nav h1 { font-size: 1.1rem; }
+            .back-nav a { padding: 7px 14px; font-size: 0.85rem; }
+            .resume-container { padding: 15px 15px; margin: 15px auto; }
+            .main-content h2 { font-size: 1.5rem; }
+            .skill-card { padding: 12px 0; font-size: 0.85em; }
+            .project-item h3 { font-size: 1rem; }
+            .profile-picture { width: 100px; height: 100px; margin-bottom: 20px; }
+            footer { padding: 20px 15px; }
+        }
+
+        /* Helper for RGBA values in JS-generated colors */
+        .color-helper {
+            visibility: hidden;
+            position: absolute;
+            left: -9999px;
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h1>Meet Your Developer</h1>
+        <a href="index.html" aria-label="Back to Main Projects">← Return</a>
+    </header>
+    <div class="resume-container">
+        <aside class="sidebar">
+            <h2>Hello!</h2>
+            <div class="profile-picture" tabindex="0">
+                <span class="profile-hi">HI</span>
+            </div>
+            <p>I’m a front-end developer who simply enjoys turning ideas into accessible, reliable, and delightful web experiences. Every project is a chance to learn, so you’ll always find me improving and listening. I value teamwork and clarity far more than showiness.</p>
+            <div class="contact-info">
+                <h2>Contact</h2>
+                <p>Email: hello@webcrafted.team</p>
+                <p>Phone: (890) 555-9843</p>
+                <p>Location: Remote, Earth</p>
+                <p>LinkedIn: /in/humbledev</p>
+            </div>
+        </aside>
+        <main class="main-content">
+            <section class="skills-section">
+                <h2>Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-card"><span>HTML & Accessibility</span></div>
+                    <div class="skill-card"><span>CSS & Responsive Design</span></div>
+                    <div class="skill-card"><span>Flexbox & Grid</span></div>
+                    <div class="skill-card"><span>User Experience</span></div>
+                    <div class="skill-card"><span>Interface Animation</span></div>
+                    <div class="skill-card"><span>Performance Tuning</span></div>
+                    <div class="skill-card"><span>Collaboration</span></div>
+                    <div class="skill-card"><span>SVG Styling</span></div>
+                </div>
+            </section>
+            <section class="projects-section">
+                <h2>Recent Projects</h2>
+                <div class="project-item">
+                    <h3>Calm Dashboard UI</h3>
+                    <p>A dashboard designed to remove distractions, focusing on readability and minimalist component styling—all hand-built with CSS grid and attention to accessibility.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Animated Product Explorer</h3>
+                    <p>This gallery project highlights subtle, accessible 3D transitions and color-layered backgrounds, making interaction smooth on all devices without overly flashy effects.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Adaptive Blog Framework</h3>
+                    <p>Created a blog structure that’s easy to adapt for different users. Navigation, typography, and color are tuned for readers, not just for style.</p>
+                </div>
+            </section>
+            <section class="contact-section">
+                <h2>Let’s Connect</h2>
+                <p>If you think we could create something meaningful together, just reach out. I’m grateful for each opportunity and always happy to chat!</p>
+            </section>
+        </main>
+    </div>
+    <footer>
+        <p><span>© 2025 Webcrafted.team.</span><br>Designed for clarity and purpose.</p>
+    </footer>
+
+    <span class="color-helper" style="color: var(--accent-main);"></span>
+    <span class="color-helper" style="color: var(--accent-highlight);"></span>
+    <span class="color-helper" style="color: var(--profile-hi-hover);"></span>
+
+    <script>
+        // Helper to convert hex/named colors from CSS variables to RGB for rgba() usage in CSS
+        const getRgbFromCssVar = (varName) => {
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = `var(${varName})`;
+            tempDiv.style.display = 'none';
+            document.body.appendChild(tempDiv);
+            const color = getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+
+            const match = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            if (match) {
+                return `${match[1]}, ${match[2]}, ${match[3]}`;
+            }
+            return '0, 0, 0'; // Default to black if conversion fails
+        };
+
+        // Set RGB variables on load
+        document.documentElement.style.setProperty('--accent-main-rgb', getRgbFromCssVar('--accent-main'));
+        document.documentElement.style.setProperty('--accent-highlight-rgb', getRgbFromCssVar('--accent-highlight'));
+        document.documentElement.style.setProperty('--profile-hi-hover-rgb', getRgbFromCssVar('--profile-hi-hover'));
+
+    </script>
+</body>
+</html>

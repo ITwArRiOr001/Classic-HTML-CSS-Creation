@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 9: Product Landing Page (Brand Simulation)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@700&family=Lato:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep-blue: #0a0e1a; /* Very dark blue-black */
+            --bg-accent-blue: #1a2a40; /* Slightly lighter deep blue */
+            --primary-accent-cyan: #00e0ff; /* Bright, electric cyan */
+            --secondary-accent-magenta: #ff00ff; /* Vibrant, contrasting magenta */
+            --tertiary-accent-gold: #ffeb3b; /* Dynamic gold */
+            
+            --text-light: #e0e0e0;
+            --text-dark: #2a3a4a; /* Dark text for contrast on light elements */
+
+            --shadow-dark-strong: rgba(0, 0, 0, 0.6);
+            --shadow-dark-subtle: rgba(0, 0, 0, 0.3);
+
+            --button-text-dark: #1a1a2e; /* Very dark text for buttons */
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Lato', sans-serif; /* Clean font for readability */
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-deep-blue), var(--bg-accent-blue));
+            color: var(--text-light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            /* Animated background grid/lines for a high-tech feel */
+            background-image:
+                linear-gradient(rgba(0, 224, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 224, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: bgGridFlow 25s linear infinite;
+        }
+
+        @keyframes bgGridFlow {
+            from { background-position: 0 0; }
+            to { background-position: 600px 600px; }
+        }
+
+        /* Header for Navigation */
+        .back-nav {
+            background-color: rgba(0, 0, 0, 0.8); /* Stronger translucent black */
+            padding: 14px 20px; /* More padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 110%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 25px var(--shadow-dark-strong); /* Deeper shadow */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary-accent-cyan); /* Bold cyan border */
+            backdrop-filter: blur(12px); /* Stronger frosted glass */
+        }
+
+        .back-nav a {
+            color: var(--primary-accent-cyan);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.15rem;
+            transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease;
+            text-shadow: 0 0 10px rgba(0, 224, 255, 0.7); /* Vibrant cyan glow */
+            letter-spacing: 0.05em;
+        }
+
+        .back-nav a:hover {
+            color: var(--secondary-accent-magenta); /* Magenta on hover for striking contrast */
+            transform: translateY(-3px); /* More pronounced lift */
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.9); /* Intense magenta glow */
+        }
+
+        .back-nav h1 {
+            font-family: 'Montserrat', sans-serif; /* Bold, modern font for titles */
+            color: var(--text-light);
+            font-size: 1.8rem;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            letter-spacing: 0.12em; /* More spaced out */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Stronger white aura */
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #4a148c, #004d40); /* Deep Purple to Dark Teal - Retained from previous good design */
+            color: var(--text-light);
+            text-align: center;
+            padding: 120px 20px 80px; /* More generous padding for grand feel */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px var(--shadow-dark-strong); /* Deeper shadow */
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            background: url('data:image/svg+xml;charset=UTF8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 L 0 10" fill="none" stroke="%23ffffff" stroke-opacity="0.03" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/><path d="M 0 0 L 100 100 M 100 0 L 0 100" stroke="%23ffffff" stroke-opacity="0.02" stroke-width="1"/></svg>') repeat;
+            opacity: 0.8;
+            z-index: 0;
+            animation: patternPan 80s linear infinite; /* Slower, more majestic pan */
+        }
+
+        @keyframes patternPan {
+            from { background-position: 0 0; }
+            to { background-position: 1200px 1200px; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px; /* Even wider content area */
+            margin: 0 auto;
+        }
+
+        .hero-content h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(4rem, 8vw, 6rem); /* **MASSIVE, IMPACTFUL TITLE** */
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.15em; /* Very spaced out */
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: clamp(1.4rem, 2.8vw, 1.8rem); /* Larger and more inviting sub-text */
+            margin-bottom: 50px;
+            opacity: 0.95;
+            line-height: 1.7;
+            max-width: 800px; /* Control width for readability */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-accent-cyan), var(--secondary-accent-magenta)); /* Cyan to Magenta gradient - very vibrant */
+            color: var(--button-text-dark); /* Dark text on vibrant button */
+            padding: 22px 50px; /* **HUGE BUTTON** */
+            border-radius: 60px; /* More rounded */
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.3rem; /* Larger font */
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 12px 40px rgba(0, 224, 255, 0.6); /* **INTENSE CYAN GLOW** */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: 2px solid rgba(255, 255, 255, 0.2); /* Subtle white border for definition */
+            letter-spacing: 0.08em; /* Spaced out */
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%; /* Start further left for longer shine */
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); /* Brighter, wider shine */
+            transition: left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother, slightly slower shine */
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 150%; /* End further right */
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(45deg, var(--secondary-accent-magenta), var(--primary-accent-cyan)); /* Invert gradient on hover for dynamic look */
+            transform: translateY(-8px); /* **DRAMATIC LIFT** */
+            box-shadow: 0 18px 50px rgba(255, 0, 255, 0.8); /* **EVEN MORE INTENSE MAGENTA GLOW** */
+            border-color: rgba(255, 255, 255, 0.5); /* Border glows white */
+        }
+
+        /* Feature Section */
+        .features-section {
+            padding: 100px 40px; /* More generous padding */
+            text-align: center;
+            background-color: var(--bg-accent-blue); /* Slightly lighter deep blue for contrast */
+            border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+        }
+
+        .features-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(3rem, 6vw, 4.5rem); /* Larger heading */
+            color: var(--tertiary-accent-gold); /* Gold for section titles */
+            margin-bottom: 70px; /* More space */
+            text-shadow: 0 0 20px rgba(255, 235, 59, 0.6), 0 0 30px rgba(255, 235, 59, 0.4);
+            letter-spacing: 0.1em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Wider min width */
+            gap: 50px; /* **HUGE GAP** for visual breathing room */
+            max-width: 1300px; /* Increased max-width for features grid */
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            background-color: rgba(25, 25, 40, 0.8); /* Darker, more opaque translucent item */
+            border-radius: 20px; /* More rounded */
+            padding: 45px; /* More padding */
+            box-shadow: 0 8px 30px var(--shadow-dark-subtle), inset 0 0 15px rgba(255,255,255,0.08); /* Deeper shadow, inner light */
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease; /* Springy lift */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+        }
+
+        .feature-item:hover {
+            transform: translateY(-15px); /* **MORE DRAMATIC LIFT** */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--primary-accent-cyan); /* Stronger shadow with vibrant cyan glow */
+        }
+
+        .feature-icon {
+            width: 100px; /* **LARGER ICON** */
+            height: 100px;
+            background: linear-gradient(45deg, var(--primary-accent-cyan), var(--secondary-accent-magenta)); /* Cyan to Magenta gradient for icons */
+            margin: 0 auto 30px; /* More space below icon */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem; /* Larger icon symbol */
+            color: var(--text-light);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: iconRotate 15s linear infinite; /* Icons slowly rotate */
+        }
+
+        @keyframes iconRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            width: 180%; /* Even larger pulse effect */
+            height: 180%;
+            background: rgba(255, 255, 255, 0.15); /* Brighter inner pulse */
+            border-radius: 50%;
+            animation: pulse-icon 3s infinite alternate; /* Slower, more prominent pulse */
+        }
+
+        @keyframes pulse-icon {
+            from { transform: scale(0.6); opacity: 0.5; }
+            to { transform: scale(1); opacity: 0.8; }
+        }
+
+        .feature-item h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem; /* **LARGER HEADING** */
+            color: var(--primary-accent-cyan); /* Cyan for feature titles */
+            margin-bottom: 20px;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 15px rgba(0, 224, 255, 0.5); /* Cyan glow */
+        }
+
+        .feature-item p {
+            font-size: 1.1rem; /* Clearer body text */
+            color: var(--text-light);
+            opacity: 0.85;
+            line-height: 1.8;
+            max-width: 90%; /* Control text width within item */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Testimonial Section */
+        .testimonial-section {
+            background: var(--bg-deep-blue); /* Matches body start for seamless flow */
+            padding: 100px 40px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+        }
+
+        .testimonial-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(3rem, 6vw, 4.5rem); /* Consistent heading size */
+            color: var(--tertiary-accent-gold);
+            margin-bottom: 60px;
+            text-shadow: 0 0 20px rgba(255, 235, 59, 0.6), 0 0 30px rgba(255, 235, 59, 0.4);
+            letter-spacing: 0.1em;
+        }
+
+        .testimonial-card {
+            background-color: rgba(25, 25, 40, 0.8); /* Matches feature item background */
+            border-radius: 20px;
+            max-width: 900px; /* Wider card */
+            margin: 0 auto;
+            padding: 50px; /* More padding */
+            box-shadow: 0 10px 35px var(--shadow-dark-strong), inset 0 0 20px rgba(0, 224, 255, 0.2); /* Deeper shadow, inner cyan glow */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 35px var(--secondary-accent-magenta); /* Intense magenta glow on hover */
+        }
+
+        .testimonial-card::before {
+            content: '“';
+            font-family: 'serif';
+            font-size: 8rem; /* **HUGE QUOTE MARK** */
+            color: rgba(255, 255, 255, 0.08); /* More subtle */
+            position: absolute;
+            top: 5px; /* Adjust position */
+            left: 20px;
+            z-index: 0;
+            line-height: 1; /* Keep it tight */
+        }
+        .testimonial-card::after {
+            content: '”';
+            font-family: 'serif';
+            font-size: 8rem; /* **HUGE QUOTE MARK** */
+            color: rgba(255, 255, 255, 0.08); /* More subtle */
+            position: absolute;
+            bottom: -20px; /* Adjust position */
+            right: 20px;
+            z-index: 0;
+            transform: rotateY(180deg); /* Flip for visual symmetry */
+            line-height: 1;
+        }
+
+        .testimonial-quote {
+            font-size: 1.4rem; /* Larger quote text */
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+            max-width: 90%; /* Control width for readability */
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.95;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--primary-accent-cyan); /* Cyan for author */
+            font-size: 1.2rem; /* Larger font */
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 10px rgba(0, 224, 255, 0.5); /* Cyan glow */
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-deep-blue); /* Matches body start for seamless bottom */
+            color: #8090a8; /* Muted cool grey for subtle contrast */
+            text-align: center;
+            padding: 60px 40px; /* More padding */
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separation */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .hero-content h2 {
+                font-size: clamp(3.5rem, 7vw, 5rem);
+            }
+            .hero-content p {
+                font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            }
+            .cta-button {
+                padding: 20px 40px;
+                font-size: 1.2rem;
+            }
+            .features-section h2, .testimonial-section h2 {
+                font-size: clamp(2.8rem, 5vw, 4rem);
+            }
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 40px;
+            }
+            .feature-item {
+                padding: 40px;
+            }
+            .feature-icon {
+                width: 90px;
+                height: 90px;
+                font-size: 3rem;
+            }
+            .feature-item h3 {
+                font-size: 1.8rem;
+            }
+            .feature-item p {
+                font-size: 1rem;
+            }
+            .testimonial-card {
+                padding: 40px;
+            }
+            .testimonial-quote {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .back-nav {
+                padding: 15px 30px;
+            }
+            .hero-section {
+                padding: 150px 30px 100px;
+            }
+            .hero-content h2 {
+                font-size: clamp(3rem, 7vw, 4.5rem);
+            }
+            .hero-content p {
+                font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            }
+            .cta-button {
+                padding: 18px 35px;
+                font-size: 1.1rem;
+            }
+            .features-section, .testimonial-section, footer {
+                padding: 80px 30px;
+            }
+            .features-section h2, .testimonial-section h2 {
+                font-size: clamp(2.5rem, 5vw, 3.5rem);
+            }
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
+            .feature-item {
+                padding: 35px;
+            }
+            .feature-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            .feature-item h3 {
+                font-size: 1.6rem;
+            }
+            .feature-item p {
+                font-size: 0.95rem;
+            }
+            .testimonial-card {
+                padding: 35px;
+            }
+            .testimonial-quote {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .back-nav h1 {
+                font-size: 1.5rem;
+            }
+            .back-nav a {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+            .hero-section {
+                padding: 120px 20px 80px;
+            }
+            .hero-content h2 {
+                font-size: clamp(2.5rem, 6vw, 4rem);
+                margin-bottom: 25px;
+            }
+            .hero-content p {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+                margin-bottom: 40px;
+            }
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+            .features-section h2, .testimonial-section h2 {
+                font-size: clamp(2.2rem, 5vw, 3rem);
+                margin-bottom: 50px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr; /* Single column */
+                gap: 25px;
+            }
+            .feature-item {
+                padding: 30px;
+            }
+            .feature-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2.2rem;
+                margin-bottom: 20px;
+            }
+            .feature-item h3 {
+                font-size: 1.4rem;
+            }
+            .feature-item p {
+                font-size: 0.95rem;
+            }
+            .testimonial-card {
+                padding: 30px;
+            }
+            .testimonial-quote {
+                font-size: 1.1rem;
+            }
+            .testimonial-author {
+                font-size: 1rem;
+            }
+            .testimonial-card::before, .testimonial-card::after {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-nav h1 {
+                font-size: 1.3rem;
+            }
+            .back-nav a {
+                font-size: 0.95rem;
+                padding: 10px 20px;
+            }
+            .hero-section {
+                padding: 100px 15px 60px;
+            }
+            .hero-content h2 {
+                font-size: clamp(2rem, 6vw, 3.5rem);
+            }
+            .hero-content p {
+                font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+                margin-bottom: 30px;
+            }
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .features-section h2, .testimonial-section h2 {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                margin-bottom: 40px;
+            }
+            .feature-item {
+                padding: 25px;
+            }
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            .feature-item h3 {
+                font-size: 1.2rem;
+            }
+            .feature-item p {
+                font-size: 0.9rem;
+            }
+            .testimonial-card {
+                padding: 20px;
+            }
+            .testimonial-quote {
+                font-size: 1rem;
+            }
+            .testimonial-author {
+                font-size: 0.9rem;
+            }
+            footer {
+                padding: 40px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="back-nav">
+        <h2>Product Landing Page</h2>
+        <a href="index.html">←Exit</a>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>CSSForge: A Pure CSS Framework for Scalable Interfaces</h2>
+                <p>CSSForge is a lightweight, modular, and responsive design system built entirely with CSS3. It eliminates the need for JavaScript in UI layouts, making it ideal for educational projects, minimal web apps, and performance-focused builds.</p>
+                <a href="#" class="cta-button">Download Framework (ZIP)</a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <h2>Powerful Features</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🛠️</div>
+                    <h3>Modular Architecture</h3>
+                    <p>CSSForge uses component-based styles and semantic structure, improving scalability and reducing CSS duplication across pages.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Performance-Optimized</h3>
+                    <p>No JavaScript, no third-party libraries — just fast-loading, accessible markup and styles ideal for low-bandwidth environments.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsive by Design</h3>
+                    <p>Fully responsive grid, flexible typography, and layout utilities built with `clamp()` and `media queries` ensure device adaptability.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">♿</div>
+                    <h3>Accessibility-Focused</h3>
+                    <p>Follows semantic HTML5 principles and WCAG guidelines. Easy to extend with ARIA attributes for inclusive web development.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✨</div>
+                    <h3>Intuitive Design</h3>
+                    <p>Craft beautiful layouts effortlessly with our streamlined, CSS-driven interface, enhancing developer experience.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <h3>Innovative Solutions</h3>
+                    <p>Explore unique effects and components, showcasing the bleeding edge of CSS capabilities without compromise.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonial-section">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"As a frontend intern working on internal dashboards, CSSForge helped me build responsive layouts without relying on JavaScript. It’s fast, easy to extend, and ideal for academic and entry-level professional use."</p>
+                <p class="testimonial-author">— Aditi R., Front-End Intern, FinTech Labs</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CSSForge. All rights reserved.<br> Crafted with the art of CSS.</p>
+    </footer>
+</body>
+</html>
