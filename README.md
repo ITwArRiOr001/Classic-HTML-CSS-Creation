@@ -27,7 +27,7 @@ Ideal for frontend learners, design system builders, and code-based artists look
 ---
 # 🌐 Live Demo
 
-> 🔗 [View the live showcase](https://itwarrior001.github.io/Classic-HTML-CSS-Creation/)
+> 🔗 [View the live showcase][https://itwarrior001.github.io/Classic-HTML-CSS-Creation/]
 
 > _(Replace `elite-css-creations` with your actual repo name once deployed)_
 
